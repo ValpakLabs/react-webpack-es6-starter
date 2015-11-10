@@ -1,5 +1,6 @@
 {
   "name": "node-vpcom",
+  "exec_interpreter": "~/.nvm/versions/node/v4.2.1/bin/node",
   "cwd": "/app/webdocs/node-vpcom",
   "script": "babel.server.js",
   "instances": 1,
