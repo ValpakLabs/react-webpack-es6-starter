@@ -17,4 +17,6 @@ require("babel/register")({
 });
 require('./src/server/app')
   .start()
-  .catch(error => console.error(error));
+  .catch(function(error) {
+    console.error(error)
+  });
