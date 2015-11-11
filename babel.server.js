@@ -6,7 +6,7 @@ global.__DEVELOPMENT__ = process.env.NODE_ENV === 'development';
 
 require('css-modules-require-hook')({
   extensions: ['.scss'],
-  generateScopedName: (exportedName, exportedPath) => {
+  generateScopedName: function (exportedName, exportedPath) {
     let path = exportedPath.substr(1).replace(/\//g, "-").replace('.css', '');
     return path + "-" + exportedName;
   }
