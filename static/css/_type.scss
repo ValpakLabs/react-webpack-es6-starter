@@ -1,0 +1,297 @@
+$black54: lighten(#000, 46);
+$black87: lighten(#000, 13);
+
+// type sizes
+.type--tiny {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 16px;
+}
+.type--button {
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: $black87;
+  line-height: 24px;
+}
+.type--icon-button {
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: $black87;
+  line-height: 24px;
+}
+.type--submenu {
+  font-size: 13px;
+  font-weight: 300;
+  color: $black54;
+  line-height: 24px;
+  letter-spacing: 0.02rem;
+}
+.type--menu {
+  font-size: 13px;
+  font-weight: 400;
+  color: $black87;
+  line-height: 24px;
+  letter-spacing: 0.02rem;
+} 
+.type--caption {
+  font-size: 12px;
+  font-weight: 300;
+  color: $black54;
+  line-height: 24px;
+}
+.type--label {
+  font-size: 14px;
+  font-weight: 600;
+  color: $black54;
+  line-height: 24px;
+}
+.type--body-1 {
+  font-size: 14px;
+  font-weight: 300;
+  color: $black87;
+  line-height: 20px;
+}
+.type--body-2 {
+  font-size: 14px;
+  font-weight: 400;
+  color: $black87;
+  line-height: 24px;
+}
+.type--body-3 {
+  font-size: 15px;
+  font-weight: 400;
+  color: $black87;
+  line-height: 24px;
+}
+.type--body-4 {
+  font-size: 16px;
+  font-weight: 300;
+  color: $black87;
+  line-height: 24px;
+}
+.type--subhead {
+  font-size: 15px;
+  font-weight: 300;
+  color: $black87;
+  line-height: 24px;
+}
+.type--title {
+  font-size: 20px;
+  font-weight: 400;
+  color: $black87;
+  line-height: 24px;
+}
+.type--headline {
+  font-size: 24px;
+  font-weight: 300;
+  color: $black87;
+  line-height: 24px;
+}
+.type--display-1 {
+  font-size: 34px;
+  font-weight: 300;
+  color: $black54;
+  line-height: 40px;
+}
+.type--display-2 {
+  font-size: 45px;
+  font-weight: 300;
+  color: $black54;
+  line-height: 48px;
+}
+.type--display-3 {
+  font-size: 56px;
+  font-weight: 300;
+  color: $black54;
+  line-height: 60px;
+}
+.type--display-4 {
+  font-size: 112px;
+  font-weight: 100;
+  color: $black54;
+  line-height: 120px;
+}
+
+
+
+.indent {
+  margin-left: 45px;
+}
+
+a {
+  text-decoration: none;
+  color: $cyan-800;
+  &:hover, &:active {
+    color: $cyan-600;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  margin: 0
+}
+
+p {
+  margin: 0;
+}
+
+.black {
+  color: $grey-900;
+}
+
+.error-text {
+  color: $red-500;
+}
+.success-text {
+  color: $light-green-500;
+}
+
+.semistrong {
+  font-weight: 400;
+}
+.strong {
+  font-weight: 600;
+}
+.subdued {
+  opacity: 0.75;
+}
+.quiet {
+  opacity: 0.25;
+}
+.reverse {
+  color: #FFF;
+}
+
+::selection {
+  background: $blue-grey-100; 
+}
+
+
+// Parent style for formatting large blocks of text 
+.typographic {
+
+  font-size: 14px;
+  line-height: 20px; 
+
+  h1 {
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 40px;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 30px;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 30px;
+    margin-bottom: 16px;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 20px;
+    margin-bottom: 16px;
+  }
+
+  h5 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    margin-bottom: 16px;
+  }
+
+  h6 {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin-bottom: 20px;
+  }
+
+
+
+  ul, ol {
+    // list-style-position: inside;
+    margin-bottom: 20px;
+
+    li {
+      margin-left: 1.4rem;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    ul, ol {
+      margin-bottom: 0;
+    }
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid $blue-grey-100;
+    margin: 2rem 0;
+  }
+
+  code {
+    border: 1px solid $blue-grey-100;
+    border-radius: 2px;
+  }
+
+  pre code {
+    display: block;
+    background: $blue-grey-50;
+    margin: 0 0 1.5em 0;
+    padding: 1em;
+  }
+
+  h1,h2,h3,h4,h5,h6,p,li {
+    > code {
+      background: $blue-grey-50;
+      padding: 0.15em 0.2em;
+    }
+  }
+
+  blockquote {
+    border-left: 4px solid $blue-grey-50;
+    padding-left: 1em;
+    font-style: italic;
+  }
+
+}
+
+
+
+//custom
+
+.title--section {
+  margin-bottom: 24px;
+  font-size: 16px;
+  font-weight: 500;
+  color: $brand-color-primary;
+
+  text-align: center;
+
+  @include tablet {
+    font-size: 24px;
+    margin-bottom: 32px;
+    font-weight: 100;
+  }
+
+  @include desktop {
+    text-align: left;
+  }
+}

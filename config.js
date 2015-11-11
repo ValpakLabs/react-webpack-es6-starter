@@ -1,7 +1,7 @@
 
 module.exports = {
   development: {
-    appContext: '/r',
+    appContext: '',
     mongoHost: 'mongodb://mongodev-01.coxtarget.com/valpak',
     serverRendering: true,
     isProduction: false,
@@ -11,7 +11,7 @@ module.exports = {
     }
   },
   production: {
-    appContext: '/r',
+    appContext: '',
     mongoHost: 'mongodb://mongodb-01.coxtarget.com/valpak',
     serverRendering: true,
     isProduction: true,

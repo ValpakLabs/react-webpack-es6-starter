@@ -4,6 +4,7 @@ global.__CLIENT__ = false;
 global.__SERVER__ = true;
 global.__DEVELOPMENT__ = process.env.NODE_ENV === 'development';
 
+require('isomorphic-fetch');
 require('css-modules-require-hook')({
   extensions: ['.scss'],
   generateScopedName: function (exportedName, exportedPath) {

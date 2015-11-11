@@ -23,7 +23,33 @@ var config = {
   module: {
     loaders: [
       {test: /\.scss$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap'},
-      {test: /\.js$/, include: path.resolve(__dirname, './src'), loader: 'babel'}
+      {
+        test: /\.js$/,
+        include: path.join(__dirname, 'src'),
+        loader: 'babel',
+        "query": {
+          "stage": 0,
+          "optional": ["es7.asyncFunctions", "runtime"],
+          "env": {
+            "development": {
+              "plugins": ["react-transform"],
+              "extra": {
+                "react-transform": {
+                  "transforms": [{
+                    "transform": "react-transform-hmr",
+                    "imports": ["react"],
+                    "locals": ["module"]
+                  }, {
+                    "transform": "react-transform-catch-errors",
+                    "imports": ["react", "redbox-react"]
+                  }]
+                }
+              }
+            }
+          }
+        }
+      },
+      {test: /\.json$/, loader: 'json-loader' }
     ]
   },
 

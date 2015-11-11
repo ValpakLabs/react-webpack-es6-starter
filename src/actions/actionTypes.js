@@ -1,0 +1,3 @@
+export const UPDATE_VIEWPORT = 'UPDATE_VIEWPORT';
+
+export const LOAD_USER_DEVICE = 'LOAD_USER_DEVICE';

@@ -1,0 +1,35 @@
+.Ripple {
+  transform: translate3d(0,0,0);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  user-select: none;
+}
+
+.Circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: $brand-color-tertiary;
+  transform-origin: 50% 50%;
+  transition: transform 300ms 0ms $out-quad, opacity 300ms 0ms $out-quad;
+  transform: scale(0);
+  opacity: 1;
+
+  &.Circle--is-starting {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  &.Circle--is-ending {
+    transition: transform 400ms 0ms $in-quad, opacity 400ms 0ms $in-quad;
+    transform: scale(0);
+    opacity: 0;
+  }
+} 
+
+

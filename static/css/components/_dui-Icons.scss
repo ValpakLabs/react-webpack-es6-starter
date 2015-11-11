@@ -1,0 +1,29 @@
+.dui_Icon {
+  @extend .layout;
+  @extend .horizontal;
+  @extend .center;
+  @extend .center-justified;
+  height: 24px;
+  width: 24px;
+  fill: inherit;
+  position: relative;
+
+  transform: translate3d(0,0,0);
+
+  [disabled] & {
+    fill: $grey-500!important;
+  }
+
+  &.dui-level-reverse, .dui-level-reverse & {
+    fill: $reverse-color;
+  }
+  &.dui-level-info {
+    fill: $info-color;
+  }
+  &.dui-level-success {
+    fill: $info-color;
+  }
+  &.dui-level-warn {
+    fill: $info-color;
+  }
+}

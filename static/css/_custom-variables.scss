@@ -1,0 +1,43 @@
+// Dimensions
+$max-content-width: 960px;
+
+// Colors Levels
+$reverse-color: #FFF;
+$info-color: $blue-500;
+$success-color: $light-green-500;
+$warn-color: $red-500;
+
+// Brand Colors
+$brand-color-primary: #002f6c;
+$brand-color-secondary: #82BC00;
+$brand-color-tertiary: #00A0DF;
+
+// Component Color Vars
+$site-header-background-color: $brand-color-primary;
+$search-scrim-fill-color: $brand-color-tertiary;
+
+// Easing Curves
+$out-quad: cubic-bezier(0.250, 0.460, 0.450, 0.940);
+$in-quad: cubic-bezier(0.175, 0.885, 0.320, 1.275);
+$out-back: cubic-bezier(0.175, 0.885, 0.320, 1.275);
+
+
+// Animation Timing
+$masthead-intro-transition-duration: 0.5s;
+$masthead-intro-transition-easing: $out-quad;
+
+$logo-intro-transition-duration: 0.4s;
+$logo-intro-transition-delay: 0.5s;
+$logo-intro-transition-easing: $out-back;
+
+$tagline-intro-transition-duration: 0.4s;
+$tagline-intro-transition-delay: 0.7s;
+$tagline-intro-transition-easing: $out-back;
+
+$search-transition-duration: 0.2s ;
+$search-transition-delay: 0.1s;
+$search-transition-easing: $out-back;
+
+$search-intro-transition-duration: 0.3s;
+$search-intro-transition-delay: 1s;
+$search-intro-transition-easing: $out-quad;

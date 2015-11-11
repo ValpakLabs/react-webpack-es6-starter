@@ -1,0 +1,123 @@
+.Card {
+  position: relative;
+  // padding: 12px;
+}
+
+.Card__inner {
+  border-radius: 3px;
+  position: relative;
+  background: #FFF;
+  box-shadow: 0px 2px 4px rgba(#000, 0.2);
+  overflow: hidden;
+}
+
+.Card img {
+  transition: opacity .3s;
+}
+
+
+.Card__badge {
+  @extend .layout;
+  @extend .vertical;
+  @extend .center;
+  @extend .center-justified;
+  position: absolute;
+  right: 10px;
+
+  .Card__banner__wrapper + & {
+    transform: translateY(-66%);
+  }
+
+  overflow: hidden;
+  width: 72px;
+  height: 72px;
+  padding: 5px;
+  background: #FFF;
+  box-shadow: 0px 2px 3px rgba(#000, 0.2);
+}
+
+.Card__content {
+  padding: 20px 16px;
+}
+
+.Card__badge__image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.Card__footer {
+  @extend .layout;
+  @extend .horizontal;
+  @extend .center;
+  width: 100%;
+
+  button {
+    width: 50%;
+    margin: 0;
+    padding: 8px;
+    border: 0;
+    background: transparent;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    outline: none;
+    font-weight: 500;
+    display: block;
+
+    &:first-child {
+      color: $brand-color-secondary;
+    }
+    &:last-child {
+      color: $brand-color-tertiary;
+    }
+  }
+}
+
+.Card__anchor-wrapper {
+  color: initial;
+  cursor: default;
+
+  &:hover, &:active, &:visited {
+    color: initial;
+  }
+}
+
+
+// MINI CARDS
+
+.Card--mini {
+  cursor: pointer;
+  // padding: 12px; 
+}
+
+.Card--mini__inner {
+  @extend .layout;
+  @extend .vertical;
+  @extend .center;
+  background: #fff;
+  height: 100%;
+  border-radius: 2px;
+  box-shadow: 0px 2px 4px rgba(#000, 0.1);
+  border: 1px solid $grey-300;
+}
+
+
+.Card--mini__content {
+  @extend .layout;
+  @extend .horizontal;
+  @extend .center;
+  @extend .center-justified;
+  @extend .flex;
+  width: 100%;
+  border-top: 1px dashed $grey-300;
+  padding: 5px;
+  background: rgba($grey-100, 0.5);
+
+  * {
+    text-align: center;
+    font-size: 13px;
+    line-height: 16px;
+    margin: 0 5px;
+  }
+}
