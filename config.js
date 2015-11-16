@@ -11,7 +11,7 @@ module.exports = {
     }
   },
   development: {
-    appContext: '',
+    appContext: '/r',
     mongoHost: 'mongodb://mongodev-01.coxtarget.com/valpak',
     serverRendering: true,
     host: 'http://vpdev.valpak.com/r',
@@ -22,7 +22,7 @@ module.exports = {
     }
   },
   production: {
-    appContext: '',
+    appContext: '/r',
     mongoHost: 'mongodb://mongodb-01.coxtarget.com/valpak',
     serverRendering: true,
     host: 'http://www.valpak.com/r',
