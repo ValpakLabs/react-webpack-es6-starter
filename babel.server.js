@@ -2,7 +2,7 @@
 
 global.__CLIENT__ = false;
 global.__SERVER__ = true;
-global.__DEVELOPMENT__ = process.env.NODE_ENV === 'development';
+global.__DEVELOPMENT__ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
 
 require('isomorphic-fetch');
 require('css-modules-require-hook')({

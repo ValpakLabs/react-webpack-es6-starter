@@ -11,7 +11,7 @@ import createStore from '../../redux/createStore';
 
 export default async (req, res, next) => {
   try {
-    const client = new ApiClient('http://localhost:3000', null, req);
+    const client = new ApiClient(config);
     const store = createStore(client, {
       user: {
         device: {
@@ -23,10 +23,10 @@ export default async (req, res, next) => {
       config: {
         app: config.app,
         appContext: config.appContext,
-        isProduction: config.isProduction
+        isProduction: config.isProduction,
+        host: config.host
       }
     });
-    client.store = store;
 
     if (config.serverRendering) {
       match({ routes: getRoutes(store), location: req.url }, async (error, redirectLocation, renderProps) => {

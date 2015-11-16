@@ -1,5 +1,4 @@
 import 'isomorphic-fetch';
-import config from '../config';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute } from 'react-router';
@@ -10,9 +9,8 @@ import getRoutes from './routes';
 import createStore from './redux/createStore';
 import dimensions from './utils/dimensions';
 
-const client = new ApiClient('http://localhost:3000');
+const client = new ApiClient(window.__data.config);
 const store = createStore(client, window.__data);
-client.store = store;
 
 store.initialLoad = true;
 

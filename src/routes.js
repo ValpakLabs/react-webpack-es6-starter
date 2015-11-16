@@ -1,13 +1,13 @@
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
-import config  from '../config';
 import Main from './components/Main';
 import BalefirePage from './components/BalefirePage';
 
 function getRoutes(store) {
-  const onEnter = createEnterFn(store)
+  const onEnter = createEnterFn(store);
+  const appContext = store.getState().config.get('appContext');
   return (
-    <Route component={Main} path={`${config.appContext}/`}>
+    <Route component={Main} path={`${appContext}/`}>
       <IndexRoute component={BalefirePage} onEnter={onEnter}/>
       <Route path='r/*' component={BalefirePage} onEnter={onEnter}/>
     </Route>
