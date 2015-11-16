@@ -5,6 +5,8 @@ import logger from './utils/logger';
 export async function start() {
   const app = new Express();
 
+  app.set('trust proxy', 'loopback')
+
   // hot reloading config
   if (__DEVELOPMENT__)
     require('./middleware/hotReload')(app);

@@ -1,39 +1,121 @@
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 import debounce from '../utils/debounce';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updateViewport } from '../actions/viewportActions';
+import { setUserGeo } from '../actions/userActions';
 import { viewportSizeSelector } from '../reducers/viewport';
+import { Motion, spring } from 'react-motion';
+import Color from 'color';
+import colors, {brand} from '../theme/colors';
+import Flex from './Flex';
+import Modal from './Modal';
+import Button from './Button';
+import BrandDrawer from './BrandDrawer';
+import GeoModal from './GeoModal';
 
 import '../scss/App.scss';
 
-class Main extends React.Component {
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+    ...viewportSizeSelector(state)
+  };
+}
+
+class Main extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      brandDrawerOpen: false,
+      geoModalOpen: false
+    };
     this.handleViewportResize = debounce(this.handleViewportResize, 100).bind(this);
   }
 
   getChildContext() {
     return {
-      viewportSize: this.props.viewportSize
+      appContext: this.context.store.getState().config.get('appContext'),
+      viewportSize: this.props.viewportSize,
+      toggleBrandDrawer: () => this.toggleBrandDrawer(),
+      openModal: (name) => this.openModal(name),
+      closeModal: (name) => this.closeModal(name)
     };
   }
 
   componentDidMount() {
-    this.handleViewportResize()
-    window.addEventListener('resize', this.handleViewportResize)
+    this.handleViewportResize();
+    window.addEventListener('resize', this.handleViewportResize);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleViewportResize);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const isNarrow = this.props.viewportSize === 'xs' || this.props.viewportSize === 'sm';
+    const wasNarrow = prevProps.viewportSize === 'xs' || prevProps.viewportSize === 'sm';
+    if (!isNarrow && wasNarrow && this.state.brandDrawerOpen)
+      this.setState({brandDrawerOpen: false})
+  }
+
   render() {
+    const isNarrow = this.props.viewportSize === 'xs' || this.props.viewportSize === 'sm';
+
     return (
-      <div>
-        {this.props.children}
+      <div style={{height: '100vh', overflow: this.state.brandDrawerOpen ? 'hidden' : 'visible', position: this.state.brandDrawerOpen ? 'fixed' : 'relative'}}>
+        {isNarrow && <BrandDrawer user={this.props.user.toJS()}/>}
+        <Motion
+          ref='motion'
+          style={{x: spring(this.state.brandDrawerOpen ? 260 : 0, [800, 45])}}>
+          {style =>
+            <div
+              ref='mainContent'
+              style={{
+                width: '100vw',
+                background: '#FFF',
+                position: 'relative',
+                zIndex: 2,
+                boxShadow: '-1px 0px 8px rgba(0,0,0,0.3)',
+                transform: `translateX(${style.x}px)`,
+              }}>
+              {React.cloneElement(this.props.children, {
+                viewportSize: this.props.viewportSize
+              })}
+            </div>
+          }
+        </Motion>
+
+        <GeoModal
+          geo={this.props.user.toJS().geo}
+          open={this.state.geoModalOpen}
+          narrow={isNarrow}
+          setGeo={this.props.setUserGeo}/>
       </div>
     );
+  }
+
+  toggleBrandDrawer() {
+    this.setState({brandDrawerOpen: !this.state.brandDrawerOpen}, () => {
+      let overflowHiddenCount = parseInt(document.body.dataset.hideOverflow) || 0;
+      if (this.state.brandDrawerOpen) {
+        // document.body.style.overflow = 'hidden';
+        // document.body.style.height = '100px';
+        // document.body.setAttribute('data-hide-overflow', overflowHiddenCount + 1);
+      } else {
+        // if (overflowHiddenCount === 1)
+        //   document.body.style.overflow = 'initial';
+        // document.body.setAttribute('data-hide-overflow', overflowHiddenCount - 1);
+      }
+    })
+  }
+
+  openModal(name) {
+    this.setState({[`${name}ModalOpen`]: true});
+  }
+
+  closeModal(name) {
+    this.setState({[`${name}ModalOpen`]: false});
   }
 
   handleViewportResize() {
@@ -45,8 +127,8 @@ class Main extends React.Component {
 }
 
 Main.fetchData = async (getState, dispatch, location, params) => {
-  if (!getState().user.get('device').get('is_mobile')) {
-    dispatch(updateViewport({
+  if (getState().user.get('device').get('type') !== 'phone') {
+    return dispatch(updateViewport({
       width: 1024,
       height: 1024
     }));
@@ -54,22 +136,15 @@ Main.fetchData = async (getState, dispatch, location, params) => {
 }
 
 Main.contextTypes = {
-  store: React.PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
 };
 
 Main.childContextTypes = {
-  viewportSize: React.PropTypes.string.isRequired,
+  appContext: PropTypes.string,
+  viewportSize: PropTypes.string.isRequired,
+  toggleBrandDrawer: PropTypes.func,
+  openModal: PropTypes.func,
+  closeModal: PropTypes.func
 };
 
-Main.propTypes = {
-
-};
-
-Main.defaultProps = {
-
-};
-
-export default connect(
-  viewportSizeSelector,
-  dispatch => bindActionCreators({updateViewport}, dispatch)
-)(Main);
+export default connect(mapStateToProps, {updateViewport, setUserGeo})(Main);

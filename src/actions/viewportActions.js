@@ -3,8 +3,10 @@ import {
 } from './actionTypes';
 
 export function updateViewport(viewport={}) {
-  return {
-    type: UPDATE_VIEWPORT,
-    payload: viewport
-  };
+  return (dispatch) => {
+    return dispatch({
+      type: UPDATE_VIEWPORT,
+      payload: viewport
+    });
+  }
 }

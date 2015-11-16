@@ -1,11 +1,15 @@
 import React from 'react';
+import colors, {brand} from '../theme/colors';
 import SelectableList from './SelectableList';
+import Flex from './Flex';
+import Icon from './Icon';
 
 class GeoAutoComplete extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      geoSearchTerm: '',
       geoResults: []
     }
 
@@ -32,8 +36,8 @@ class GeoAutoComplete extends React.Component {
         <div className="GeoAutoComplete" ref="geoResultsList" >
           <SelectableList
             items={selectableItems}
-            onSelectedIndexChange={this.handleIndexChange.bind(this)}
-            onItemSelected={this.handleItemSelected.bind(this)}/>
+            onSelectedIndexChange={::this.handleIndexChange}
+            onItemSelected={::this.handleGeoSelection}/>
         </div>
       );
     } else {
@@ -42,23 +46,88 @@ class GeoAutoComplete extends React.Component {
   }
 
   render() {
-    return this.renderResultsList();
+    const {currentGeo} = this.props;
+
+    const styles = {
+      form: {
+        border: this.props.narrow ? `1px solid ${colors.grey300}` : 0,
+
+        padding: '0 12px',
+        background: this.props.narrow ? colors.white : colors.grey50
+      },
+      input: {
+        border: 0,
+        background: 'transparent',
+        fontSize: 16,
+        lineHeight: '60px',
+        width: '100%',
+        margin: '0 0 0 8px',
+        padding: '6px 0',
+        outline: 'none'
+      },
+      markerIcon: {
+        color: brand.tertiary
+      },
+      suggestionList: {
+        borderTop: `${this.props.narrow ? 0 : 1}px solid ${colors.grey300}`,
+        borderLeft: `${this.props.narrow ? 1 : 0}px solid ${colors.grey300}`,
+        borderRight: `${this.props.narrow ? 1 : 0}px solid ${colors.grey300}`
+      }
+    };
+
+    return (
+      <div>
+        <form ref="geoChangeForm" style={styles.form} onSubmit={::this.handleGeoChangeSubmit}>
+          <Flex align='center'>
+            <Icon style={styles.markerIcon} name="location_on" />
+            <input
+              ref="geoInputField"
+              style={styles.input}
+              placeholder='Search by postal code or city'
+              onChange={::this.handleGeoInputChange}
+              value={this.state.geoSearchTerm} />
+          </Flex>
+        </form>
+        <div style={styles.suggestionList}>
+          {this.renderResultsList()}
+        </div>
+      </div>
+    );
   }
 
   handleIndexChange(prevIndex, index) {
+    const focusGeo = this.state.geoResults[index];
+    this.refs.geoInputField.value = `${focusGeo.city}, ${focusGeo.state}`;
     this.props.onGeoFocus(this.state.geoResults[index])
   }
 
-  handleItemSelected(index) {
-    this.props.onGeoSelected(this.state.geoResults[index])
+  handleGeoSelection(index) {
+    this.props.onGeoSelected(this.state.geoResults[index]);
+    this.resetAll();
   }
 
-  getSuggestions() {
-    if (this.props.term) {
-      let url = this.props.url;
-      let term = this.props.term;
+  handleGeoInputChange(e) {
+    this.getSuggestions(e.target.value);
+    this.setState({
+      geoSearchTerm: e.target.value
+    });
+  }
 
-      fetch(`${url}?term=${term}&count=${count}`)
+  handleGeoChangeSubmit(e) {
+    e.preventDefault();
+    let geoInputField = this.refs.geoInputField;
+    let geoValue = geoInputField.value;
+
+    geoInputField.blur();
+    this.props.onGeoSelected(geoValue);
+    this.resetAll();
+  }
+
+  getSuggestions(term) {
+    if (term) {
+      let {url, itemCount} = this.props;
+
+      fetch(`${url}?term=${term}&count=${itemCount}`)
         .then(res => {
           const json = res.json()
             .then(this.handleResponse)
@@ -72,13 +141,29 @@ class GeoAutoComplete extends React.Component {
   }
 
   handleResponse(res) {
-    let geoResults = JSON.parse(res.text);
+    let geoResults = res;
     this.setState({geoResults});
     this.props.onResponse(geoResults);
   }
 
   handleError(err) {
     this.props.onError(err);
+  }
+
+  resetAll() {
+    setTimeout(() => {
+      this.setState({
+        geoSearchTerm: '',
+        geoResults: []
+      });
+    }, 200);
+  }
+
+  focus() {
+    console.log(this.refs.geoInputField);
+    setTimeout(() => {
+      this.refs.geoInputField.focus();
+    })
   }
 
 }

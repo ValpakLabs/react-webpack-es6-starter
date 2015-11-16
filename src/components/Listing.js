@@ -24,10 +24,11 @@ class Listing extends Component {
 
     const styles = {
       backgroundColor: colors.grey300,
-      backgroundImage: `url(${props.banner || ''})`,
+      backgroundImage: props.banner ? `url(${props.banner.src})` : '',
       backgroundSize: 'cover',
       backgroundPosition: '50% 50%',
       cursor: 'pointer',
+      position: 'relative',
       ...props.style
     };
 
@@ -71,14 +72,14 @@ class Listing extends Component {
         onMouseLeave={::this.leave}>
         <Flex style={innerCardStyles}>
           {
-            props.logoSrc &&
+            props.listing.logoSrc &&
               <div style={innerCardLogoStyles}>
-                <img src={props.logoSrc} style={innerCardLogoImageStyles}/>
+                <img src={props.listing.logoSrc} style={innerCardLogoImageStyles}/>
               </div>
           }
           <Flex direction='column' flex={1}>
-            <Heading style={{margin: 0}} level={6} lineHeight='18px' weight={400} color={colors.grey500}>{props.businessName}</Heading>
-            <Heading style={{margin: 0}} level={4} lineHeight='24px' weight={400} color={brand.primary}>{props.title}</Heading>
+            <Heading style={{margin: 0}} level={6} lineHeight='18px' weight={400} color={colors.grey500}>{props.listing.businessName}</Heading>
+            <Heading style={{margin: 0}} level={4} lineHeight='24px' weight={400} color={brand.primary}>{props.listing.title}</Heading>
           </Flex>
         </Flex>
 
@@ -94,7 +95,7 @@ class Listing extends Component {
             boxShadow: '1px 1px 1px rgba(0,0,0,0.25)',
             cursor: 'pointer'
           }}>
-          <Icon fill={props.favorite ? colors.amber600 : colors.grey700} name={props.favorite ? 'star' : 'star_border'}/>
+          <Icon fill={props.listing.favorite ? colors.amber600 : colors.grey700} name={props.listing.favorite ? 'star' : 'star_border'}/>
         </div>
       </Flex>
     );
@@ -111,7 +112,8 @@ class Listing extends Component {
 
 Listing.defaultProps = {
   flex: '1 1 auto',
-  alignSelf: 'stretch'
+  alignSelf: 'stretch',
+  listing: {}
 };
 
 export default responsive(Listing);

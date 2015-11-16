@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './styles/modal.style';
-import {Motion, spring} from 'react-motion';
+import {Spring} from 'react-motion';
 
 export default class Modal extends React.Component {
 
@@ -31,7 +31,7 @@ export default class Modal extends React.Component {
 
       setTimeout(() => {
         this.setState({hidden: true});
-      }, this.props.closeDelay);
+      }, 500);
     }
   }
 
@@ -39,23 +39,12 @@ export default class Modal extends React.Component {
     if (!prevProps.show && this.props.show) {
       clearTimeout(this.timeout);
       this.setState({hidden: false});
-
-      let overflowHiddenCount = parseInt(document.body.dataset.hideOverflow) || 0;
-      document.body.style.overflow = 'hidden';
-      document.body.setAttribute('data-hide-overflow', overflowHiddenCount + 1);
-
       setTimeout(() => this.setState({isHiding: false}));
     } else if (prevProps.show && !this.props.show) {
       this.setState({isHiding: true});
-
-      let overflowHiddenCount = parseInt(document.body.dataset.hideOverflow);
-      if (!overflowHiddenCount)
-        document.body.style.overflow = 'initial';
-      document.body.setAttribute('data-hide-overflow', overflowHiddenCount - 1);
-
       this.timeout = setTimeout(() => {
         this.setState({hidden: true});
-      }, this.props.closeDelay);
+      }, 500);
     }
   }
 
@@ -63,27 +52,29 @@ export default class Modal extends React.Component {
     const containerStyle = Object.assign({}, styles.container, this.props.containerStyle);
 
     return (
-      <Motion
-        style={{
-          containerOpacity: spring(this.state.isHiding ? 0 : 1, [580, 30]),
-          opacity: spring(this.state.isHiding ? 0.01 : 1, [1500, 50]),
-          scale: spring(this.state.isHiding ? this.props.scaleBounce : 1, [400, 18])
+      <Spring
+        endValue={{
+          size: {
+            scaleX: {val: this.state.isHiding ? 0.8 : 1, config: this.state.isHiding ? [400, 40] : [300, 20]},
+            scaleY: {val: this.state.isHiding ? 0.4 : 1, config: this.state.isHiding ? [130, 20] : [600, 30]}
+          },
+          containerOpacity: {val: this.state.isHiding ? 0 : 1, config: this.state.isHiding ? [580, 30] : [210, 20]},
+          opacity: {val: this.state.isHiding ? 0.01 : 0.9, config: this.state.isHiding ? [200, 20] : [1500, 50]}
         }}>
         {interpolation =>
           <div style={{...styles.modal, display: !this.state.hidden ? 'block' : 'none'}}>
-            <div style={{...styles.modal, ...this.props.style, opacity: interpolation.opacity}} onClick={::this.hideOnOuterClick}/>
-            <div style={{...containerStyle, opacity: interpolation.containerOpacity, transform: `scale(${interpolation.scale})`}}>
+            <div style={{...styles.modal, ...this.props.style, opacity: interpolation.opacity.val}} onClick={::this.hideOnOuterClick}/>
+            <div style={{...containerStyle, opacity: interpolation.containerOpacity.val, transform: `scale(${interpolation.size.scaleX.val}, ${interpolation.size.scaleY.val})`}}>
               {this.props.children}
             </div>
           </div>
         }
-      </Motion>
+      </Spring>
     );
   }
 
 }
 
 Modal.defaultProps = {
-  closeDelay: 200,
-  scaleBounce: 0.9
+  closeDelay: 500
 };

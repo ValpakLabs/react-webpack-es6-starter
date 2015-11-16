@@ -2,18 +2,34 @@ import config from '../../../config';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { match, RoutingContext } from 'react-router';
-import getRoutes from '../../routes';
-import {AppError, NotFoundError} from '../utils/errors';
+import ApiClient from '../../ApiClient';
+import getRoutes, { prefetchData } from '../../routes';
+import { AppError, NotFoundError } from '../utils/errors';
 import Index from '../views/Index';
 import { Provider }     from 'react-redux';
 import createStore from '../../redux/createStore';
 
 export default async (req, res, next) => {
   try {
-    const store = createStore({user: {device: req.device}});
+    const client = new ApiClient('http://localhost:3000', null, req);
+    const store = createStore(client, {
+      user: {
+        device: {
+          type: req.device.type,
+          model: req.device.model
+        },
+        geo: req.geo
+      },
+      config: {
+        app: config.app,
+        appContext: config.appContext,
+        isProduction: config.isProduction
+      }
+    });
+    client.store = store;
 
     if (config.serverRendering) {
-      match({ routes: getRoutes(), location: req.url }, async (error, redirectLocation, renderProps) => {
+      match({ routes: getRoutes(store), location: req.url }, async (error, redirectLocation, renderProps) => {
         if (error) {
           res.send(500, error.message)
         } else if (redirectLocation) {
@@ -36,7 +52,6 @@ export default async (req, res, next) => {
 
             res.send(renderComponent(component, store));
           } catch (error) {
-            console.log('error!')
             next(error);
           }
         } else {
@@ -47,7 +62,6 @@ export default async (req, res, next) => {
       res.send(renderComponent(<div />, store));
     }
   } catch (error) {
-    console.log('shit', error);
     next(error);
   }
 };
@@ -63,16 +77,3 @@ function renderComponent(component, store) {
     )}
   `;
 }
-
-function prefetchData(components, getState, dispatch, location, params) {
-  return components
-    .filter((component) => getFetchData(component))
-    .map(getFetchData)
-    .map(fetchData => fetchData(getState, dispatch, location, params));
-};
-
-function getFetchData(component = {}) {
-  return component.WrappedComponent ?
-    getFetchData(component.WrappedComponent) :
-    component.fetchData;
-};

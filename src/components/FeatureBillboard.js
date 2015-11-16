@@ -1,5 +1,6 @@
 import React from 'react';
-import colors from '../theme/colors';
+import colors, {brand} from '../theme/colors';
+import { Link } from 'react-router';
 import Flex from './Flex';
 import responsive from './responsive';
 
@@ -15,15 +16,13 @@ const FeatureBillboard = (props, context) => {
 
   const styles = {
     backgroundColor: colors.grey300,
-    color: colors.grey700,
+    color: colors.white,
     height: height
   }
 
   return (
-    <Flex style={styles} align='stretch' justify='center'>
-      <div style={{overflow: 'hidden', width: '100%'}}>
-        
-      </div>
+    <Flex style={styles} align='center' justify='center'>
+      <Link to='r/theme/thanksgiving'>Visit Promo Page</Link>
     </Flex>
   );
 };

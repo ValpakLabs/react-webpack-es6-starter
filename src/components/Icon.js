@@ -22,7 +22,7 @@ class Icon extends React.Component {
     };
 
     return (
-      <i className='material-icons' style={{...style, ...this.props.style}}>{name}</i>
+      <i className='material-icons' {...this.props} style={{...style, ...this.props.style}}>{name}</i>
     );
   }
 

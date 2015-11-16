@@ -3,16 +3,16 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CleanPlugin = require('clean-webpack-plugin');
+// var CleanPlugin = require('clean-webpack-plugin');
 var strip = require('strip-loader');
-var appConfig = require('../config');
+var appConfig = require('./config');
 
-var relativeAssetsPath = '../static/dist';
+var relativeAssetsPath = 'static/dist';
 var assetsPath = path.join(__dirname, relativeAssetsPath);
 
 var config = {
   devtool: 'source-map',
-  context: path.resolve(__dirname, '..'),
+  context: path.resolve(__dirname),
 
   entry: [
     './src/client.js',
@@ -32,7 +32,7 @@ var config = {
       {test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=2&sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap=true&sourceMapContents=true')},
       {
         test: /\.js$/,
-        include: path.resolve(__dirname, '../src'),
+        include: path.resolve(__dirname, 'src'),
         loader: 'babel',
         "query": {
           "stage": 0,
@@ -44,7 +44,7 @@ var config = {
   },
 
   plugins: [
-    new CleanPlugin([relativeAssetsPath]),
+    // new CleanPlugin([relativeAssetsPath]),
 
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({

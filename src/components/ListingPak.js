@@ -7,6 +7,7 @@ import CollectionCard from './CollectionCard';
 import CollectionListing from './CollectionListing';
 import Heading from './Heading';
 import Icon from './Icon';
+import Button from './Button';
 
 const layouts = {
   goblet: {
@@ -47,6 +48,14 @@ const layouts = {
     4: [4, 3, 4, 3],
     5: [8, 3, 4, 3]
   },
+  // stack: {
+  //   0: [0, 0, 12, 3],
+  //   1: [0, 3, 12, 3],
+  //   2: [0, 6, 12, 3],
+  //   3: [0, 9, 12, 3],
+  //   4: [0, 12, 12, 3],
+  //   5: [0, 15, 12, 3]
+  // }
 };
 
 class ListingPak extends React.Component {
@@ -59,24 +68,24 @@ class ListingPak extends React.Component {
     this.updateWidth = this.updateWidth.bind(this);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (findDOMNode(this).parentNode.clientWidth !== this.state.width)
+      this.updateWidth();
+  }
+
   componentDidMount() {
-    window.addEventListener('resize', this.updateWidth);
     this.updateWidth();
     this.setState({isLoaded: true});
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWidth);
-  }
-
   updateWidth() {
-    this.setState({
-      width: findDOMNode(this).parentNode.clientWidth
-    });
+    let width = findDOMNode(this).parentNode.clientWidth;
+    this.setState({width});
   }
 
   render() {
-    let {gutter, rowHeight, title, items, url} = this.props;
+    let {gutter, rowHeight, title, items, url, viewportSize} = this.props;
+    let narrow = viewportSize === 'xs' || viewportSize === 'sm';
     let layout = layouts[this.props.layout];
 
     items = items.slice(0, Object.keys(layout).length);
@@ -91,11 +100,12 @@ class ListingPak extends React.Component {
     let colWidth = width / 12;
 
     let styles = {
-      margin: '30px 0'
+      margin: narrow ? '20px 0' : '30px 0',
+      width: '100%'
     };
 
     let gridStyles = {
-      height: height,
+      height: narrow ? 'auto' : height,
       width: width,
       margin: `${gutter / -2}px`,
       opacity: this.state.isLoaded ? 1 : 0,
@@ -106,46 +116,52 @@ class ListingPak extends React.Component {
     return (
       <div style={styles}>
         {title &&
-          <Flex justify='space-between' align='center'>
-            <Heading pushEnds={1.5} level={2}>{title}</Heading>
-            {url && <Flex align='center' style={{borderRadius: 3, padding: '6px 8px 6px 12px', background: brand.altSecondary, fontSize: 14, color: colors.white}}>See More <Icon name='arrow_forward' pushLeft={8} size={18}/></Flex>}
+          <Flex justify={narrow ? 'center' : 'space-between'} align='center' style={{marginBottom: narrow ? '1.5em' : '0'}}>
+            <Heading
+              pushEnds={1.5}
+              weight={narrow ? 500 : 300}
+              level={narrow ? 3 : 2}>
+              {title}
+            </Heading>
+            {url && !narrow && <Button icon='arrow_forward' iconRight={true} color={colors.white} fill={brand.altSecondary}>See More</Button>}
           </Flex>
         }
         <div style={gridStyles}>
           {items.map((item, index) => {
-            if (item.itemType === 'listing') {
+            if (item.type === 'LOCAL_OFFER') {
               return (
                 <Listing
                   key={index}
-                  style={{
-                    backgroundColor: colors.grey300,
-                    height: rowHeight * layout[index][3] - gutter,
-                    width: colWidth * layout[index][2] - gutter,
-                    position: 'absolute',
-                    transform: `translate(${colWidth * layout[index][0] + (gutter / 2)}px, ${rowHeight * layout[index][1] + (gutter / 2)}px)`
-                  }}
+                  style={this.getItemStyle(index, layout, colWidth, rowHeight, gutter, narrow)}
                   {...item}/>
               );
             }
 
-            if (item.itemType === 'collection') {
+            if (item.type === 'COLLECTION') {
               return (
                 <CollectionListing
                   key={index}
-                  style={{
-                    backgroundColor: colors.grey300,
-                    height: rowHeight * layout[index][3] - gutter,
-                    width: colWidth * layout[index][2] - gutter,
-                    position: 'absolute',
-                    transform: `translate(${colWidth * layout[index][0] + (gutter / 2)}px, ${rowHeight * layout[index][1] + (gutter / 2)}px)`
-                  }}
+                  style={this.getItemStyle(index, layout, colWidth, rowHeight, gutter, narrow)}
                   {...item}/>
               );
             }
           })}
         </div>
+
+        {url && narrow && <Button style={{marginTop: 24}} display='block' justify='center' iconRight={true} icon='arrow_forward' color={colors.white} fill={brand.altSecondary}>See More</Button>}
       </div>
     );
+  }
+
+  getItemStyle(index, layout, colWidth, rowHeight, gutter, narrow) {
+    return {
+      backgroundColor: colors.grey300,
+      margin: narrow ? `${gutter / 2}px 0 ${gutter}px ${gutter / 2}px` : 0,
+      height: narrow ? rowHeight * 3 - gutter : rowHeight * layout[index][3] - gutter,
+      width: narrow ? colWidth * 12 - gutter : colWidth * layout[index][2] - gutter,
+      position: narrow ? 'relative' : 'absolute',
+      transform: narrow ? 'none' : `translate(${colWidth * layout[index][0] + (gutter / 2)}px, ${rowHeight * layout[index][1] + (gutter / 2)}px)`
+    };
   }
 }
 

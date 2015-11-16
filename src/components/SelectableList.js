@@ -1,5 +1,7 @@
 import React from 'react';
-import cx from 'classnames';
+import Color from 'color';
+import colors, {brand} from '../theme/colors';
+import Icon from './Icon';
 
 class SelectableList extends React.Component {
 
@@ -12,7 +14,6 @@ class SelectableList extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounting selectable list')
     document.body.addEventListener('keyup', this.handleKeyUp, false);
   }
 
@@ -26,33 +27,54 @@ class SelectableList extends React.Component {
   }
 
   renderItems() {
+    const styles = {
+      item: {
+        listStyle: 'none',
+        padding: '12px 16px',
+        background: colors.white,
+        borderBottom: `1px solid ${colors.grey300}`,
+        margin: 0,
+        fontSize: 16,
+        cursor: 'pointer'
+      }
+    };
+
     return this.props.items.map((item, index) => {
-      let classes = cx('SelectableList__item', {
-        'SelectableList__item--active': index === this.state.selectedIndex
-      })
+      let itemStyle = {...styles.item};
+      if (this.state.selectedIndex === index)
+        itemStyle = {...itemStyle,
+          background: Color(brand.secondary).alpha(0.15).rgbaString()
+        };
       return (
-        <li className={classes} key={index} data-index={index} data-value={item.value}>{item.label}</li>
+        <li
+          style={itemStyle}
+          key={index}
+          data-index={index}
+          data-value={item.value}
+          onClick={e=> this.handleItemSelected(index)}>
+          {item.label}
+        </li>
       );
     });
   }
- 
+
   render() {
-    let classes = cx('SelectableList', {});
+    const listStyle = {
+      padding: 0,
+      margin: 0,
+      // borderTop: `1px solid ${colors.grey300}`
+    };
 
     return (
-      <ul className={classes} ref="items" onTouchTap={this.handleItemTapped.bind(this)}>
+      <ul ref="items" style={listStyle}>
         {this.renderItems()}
       </ul>
     );
   }
 
-  handleItemTapped(e) {
-    let index = parseInt(e.target.getAttribute('data-index'))
-
+  handleItemSelected(index) {
     this.setState({selectedIndex: index});
-    
-    if (typeof this.props.onItemSelected === 'function')
-      this.props.onItemSelected(index);
+    this.props.onItemSelected(index);
   }
 
   handleKeyUp(e) {
@@ -89,8 +111,8 @@ SelectableList.propTypes = {
 SelectableList.defaultProps = {
   items: [],
   selectedIndex: 0,
-  onItemSelected: null,
-  onSelectedIndexChange: null
+  onItemSelected: e => null,
+  onSelectedIndexChange: e => null
 };
 
 export default SelectableList;

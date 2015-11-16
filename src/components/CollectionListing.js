@@ -24,7 +24,7 @@ class Listing extends Component {
 
     const styles = {
       backgroundColor: colors.grey300,
-      backgroundImage: `url(${props.banner || ''})`,
+      backgroundImage: `url(${props.banner.src || ''})`,
       backgroundSize: 'cover',
       backgroundPosition: '50% 50%',
       cursor: 'pointer',

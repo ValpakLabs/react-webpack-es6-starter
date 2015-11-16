@@ -6,8 +6,8 @@ let BrandLogo = (props, context) => {
   const size = context.viewportSize || props.size || 'xs';
 
   const width = {
-    xs: 100,
-    sm: 100,
+    xs: 90,
+    sm: 90,
     md: 110,
     lg: 110
   }[size];

@@ -2,34 +2,36 @@
 import React from 'react';
 import responsive from './responsive';
 
-let Container = (props, context) => {
-  const size = context.viewportSize || props.size || 'xs';
+class Container extends React.Component {
+  render() {
+    const size = this.context.viewportSize || this.props.size || 'xs';
 
-  const maxWidth = {
-    xs: '100%',
-    sm: '100%',
-    md: '100%',
-    lg: 1024
-  }[size];
+    const maxWidth = {
+      xs: '100%',
+      sm: '100%',
+      md: '100%',
+      lg: 1024
+    }[size];
 
-  let sidePadding = {
-    xs: 12,
-    sm: 12,
-    md: 12,
-    lg: 0
-  }[size];
+    let sidePadding = {
+      xs: 10,
+      sm: 10,
+      md: 10,
+      lg: 0
+    }[size];
 
-  const styles = {
-    padding: `0 ${sidePadding}px`,
-    margin: '0 auto',
-    width: '100%',
-    maxWidth,
-    ...props.style
-  };
+    const styles = {
+      padding: `0 ${sidePadding}px`,
+      margin: '0 auto',
+      width: '100%',
+      maxWidth,
+      ...this.props.style
+    };
 
-  return (
-    <div style={styles}>{props.children}</div>
-  );
-};
+    return (
+      <div style={styles}>{this.props.children}</div>
+    );
+  }
+}
 
 export default responsive(Container);

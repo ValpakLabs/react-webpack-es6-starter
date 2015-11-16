@@ -16,7 +16,7 @@ const Header = (props, context) => {
     backgroundColor: props.color,
     height: {
       xs: 60,
-      sm: 72,
+      sm: 60,
       md: 72,
       lg: 72
     }[context.viewportSize || props.size],
