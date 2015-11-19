@@ -20,12 +20,7 @@ export default async (req, res, next) => {
         },
         geo: req.geo
       },
-      config: {
-        app: config.app,
-        appContext: config.appContext,
-        isProduction: config.isProduction,
-        host: config.host
-      }
+      config
     });
 
     if (config.serverRendering) {

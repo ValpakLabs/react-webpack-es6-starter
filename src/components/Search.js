@@ -17,7 +17,7 @@ class Search extends Component {
       borderRadius: 3,
       maxWidth: 460,
       marginLeft: 30,
-      marginRight: 16,
+      marginRight: 12,
       height: 40,
       overflow: 'hidden',
       fontSize: 16

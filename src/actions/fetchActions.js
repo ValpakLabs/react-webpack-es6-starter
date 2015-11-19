@@ -48,7 +48,7 @@ async function resolveCollections(collectionIds, client) {
 async function resolveCollectionListings(collections, client) {
   const listingIds = collections.reduce((listingIds, collection) => {
     for (let item of collection.items) {
-      if (item.type === 'LOCAL_OFFER')
+      if (item.type === 'LOCAL_OFFER' || item.type === 'NATL_OFFER')
         listingIds.push(item.offerId);
     }
     return listingIds;
@@ -58,7 +58,7 @@ async function resolveCollectionListings(collections, client) {
     let listings = await client.fetchListings(listingIds);
     collections.forEach(collection => {
       collection.items.forEach(item => {
-        if (item.type === 'LOCAL_OFFER') {
+        if (item.type === 'LOCAL_OFFER' || item.type === 'NATL_OFFER') {
           item.listing = listings.find(listing => listing.id == item.offerId);
         }
       })

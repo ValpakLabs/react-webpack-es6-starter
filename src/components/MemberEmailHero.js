@@ -1,10 +1,11 @@
 import React from 'react';
-import {findDOMNode} from 'react-dom';
+import Color from 'color';
 import colors, {brand} from '../theme/colors';
 import Container from './Container';
 import Flex from './Flex';
 import Heading from './Heading';
 import Icon from './Icon';
+import Button from './Button';
 
 class MemberEmailHero extends React.Component {
   constructor(props) {
@@ -12,51 +13,32 @@ class MemberEmailHero extends React.Component {
   }
 
   render() {
+    const {viewportSize} = this.props;
+    const narrow = (viewportSize === 'xs' || viewportSize === 'sm');
+
     const styles = {
-      backgroundColor: brand.tertiary,
-      padding: 40,
-      margin: '40px 0'
-    };
-
-    const emailFormWrapperStyles = {
-      marginTop: 30
-    };
-
-    const emailFormStyles = {
-    };
-
-    const emailInputStyles = {
-      borderRadius: 3,
-      width: 320,
-      border: 0,
-      padding: '8px 12px',
-      fontSize: 16,
-      lineHeight: '24px',
-      marginRight: 5,
-      outline: 'none'
-    };
-
-    const submitButtonStyles = {
-      border: 0,
-      background: brand.altPrimary,
-      color: colors.white,
-      fontSize: 16,
-      lineHeight: '24px',
-      padding: '8px 16px',
-      borderRadius: 3
+      base: {
+        backgroundColor: brand.primary,
+        padding: 0
+      },
+      innerContainer: {
+        padding: narrow ? '30px 0' : '40px 0',
+        width: narrow ? 320 : 620
+      }
     };
 
     return (
-      <Flex style={styles} align='center'>
-        <Container>
-          <Flex align='center' justify='center' direction='column'>
-            <Heading level={2} color={colors.white} textAlign='center'>Want savings like these <br/>delivered right to your inbox?</Heading>
+      <Flex style={styles.base} align='center'>
+        <Container style={styles.innerContainer}>
+          <Flex align='center' justify='space-between' direction={narrow ? 'column' : 'row'}>
 
-            <Flex style={emailFormWrapperStyles}>
-              <form style={emailFormStyles}>
-                <input placeholder='just add an email address' style={emailInputStyles} type="text" />
-                <button style={submitButtonStyles}>Sign Up</button>
-              </form>
+            <div style={{marginBottom: narrow ? 24 : 0}}>
+              <Heading style={{textAlign: narrow ? 'center' : 'left', lineHeight: '24px', margin: 0, marginBottom: narrow ? 10 : 0}} level={4} weight={500} color={colors.white}>Exclusive offers, right to your inbox.</Heading>
+              <Heading style={{textAlign: narrow ? 'center' : 'left', lineHeight: '36px', margin: 0}} level={2} color={colors.white}>Join the Member Email Club</Heading>
+            </div>
+
+            <Flex align='center' alignSelf='stretch'>
+              <Button icon='email' justify='center' display='block' color={colors.white} fill={brand.secondary}>Sign Up Today</Button>
             </Flex>
 
           </Flex>

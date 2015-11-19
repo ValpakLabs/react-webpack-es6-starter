@@ -4,7 +4,7 @@ import colors from '../theme/colors';
 import BrandHeader from './BrandHeader';
 import Flex from './Flex';
 import Heading from './Heading';
-import ListingPak from './ListingPak';
+import Collection from './Collection';
 import Listing from './Listing';
 import Icon from './Icon';
 import Container from './Container';

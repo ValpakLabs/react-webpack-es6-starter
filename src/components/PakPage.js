@@ -8,7 +8,7 @@ import VideoBillboard from './VideoBillboard';
 import FeaturedCategoryBar from './FeaturedCategoryBar';
 import Flex from './Flex';
 import Heading from './Heading';
-import ListingPak from './ListingPak';
+import Collection from './Collection';
 import Listing from './Listing';
 import Icon from './Icon';
 
@@ -35,7 +35,7 @@ class WelcomePage extends React.Component {
           : (
           <Container>
             <Flex>
-              <ListingPak
+              <Collection
                 layout='goblet'
                 title='Popular Offers Near You'
                 listings={[

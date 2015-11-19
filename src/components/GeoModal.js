@@ -7,26 +7,6 @@ import Button from './Button';
 import Heading from './Heading';
 import GeoAutoComplete from './GeoAutoComplete';
 
-const styles = {
-  geoModalWide: {
-    padding: 0,
-    margin: '120px auto 0 auto',
-    width: 600,
-    backgroundColor: colors.grey100,
-    borderRadius: 3,
-    overflow: 'hidden'
-  },
-  geoModalNarrow: {
-    backgroundColor: colors.grey100,
-    position: 'fixed',
-    padding: 0,
-    margin: 0,
-    width: '100vw',
-    overflow: 'hidden',
-    height: '100vh'
-  }
-};
-
 class GeoModal extends Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.open && this.props.open)
@@ -35,23 +15,54 @@ class GeoModal extends Component {
 
   render() {
     const {open, narrow, geo} = this.props;
+
+    const styles = {
+      container: {
+        background: Color(colors.grey800).alpha(0.5).rgbaString()
+      },
+      contentWide: {
+        padding: 0,
+        margin: '0 auto 0 auto',
+        width: 560,
+        backgroundColor: colors.grey100,
+        borderRadius: '0 0 3px 3px',
+        overflow: 'hidden',
+        boxShadow: '0px 8px 24px rgba(0, 0, 0, .2)'
+      },
+      contentNarrow: {
+        backgroundColor: colors.grey100,
+        position: 'fixed',
+        padding: 0,
+        margin: 0,
+        width: '100vw',
+        overflow: 'hidden',
+        height: '100vh'
+      },
+      header: {
+        height: narrow ? 60 : 72,
+        backgroundColor: colors.white,
+        padding: '4px 4px',
+        borderBottom: `1px solid ${colors.grey300}`
+      }
+    };
+
     return (
       <Modal
         show={open}
         closeOnOuterClick={true}
-        scaleBounce={narrow ? 1 : 0.8}
-        style={{width: '100%', background: Color(brand.primary).alpha(0.9).rgbaString(), fontFamily: 'inherit'}}
+        scaleBounce={narrow ? 1 : 1}
+        startY={narrow ? 0 : -50}
+        style={styles.container}
         onClose={e => this.context.closeModal('geo')}
-        containerStyle={narrow ? styles.geoModalNarrow : styles.geoModalWide}>
+        containerStyle={narrow ? styles.contentNarrow : styles.contentWide}>
 
         <div>
-          <Flex align='center' justify='space-between' style={{backgroundColor: colors.white, padding: '4px 4px', borderBottom: `1px solid ${colors.grey300}`}}>
+          <Flex align='center' justify='space-between' style={styles.header}>
             <Heading level={narrow ? 4 : 3} style={{marginLeft: 10, marginRight: 10}}>Change Neighborhood</Heading>
-            <Button icon='close' onClick={e => this.context.closeModal('geo')}/>
+            <Button icon='close' color={colors.grey500} onClick={e => this.context.closeModal('geo')}/>
           </Flex>
 
           <div style={{padding: narrow ? '20px' : '0'}}>
-            {/*<div style={{textAlign: 'right', color: colors.grey800, lineHeight: '16px', marginBottom: 6}}>{geo.city}, {geo.state} {geo.postalCode}</div>*/}
             <GeoAutoComplete
               ref='autoComplete'
               narrow={narrow}

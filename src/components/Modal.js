@@ -40,18 +40,13 @@ export default class Modal extends React.Component {
       clearTimeout(this.timeout);
       this.setState({hidden: false});
 
-      let overflowHiddenCount = parseInt(document.body.dataset.hideOverflow) || 0;
       document.body.style.overflow = 'hidden';
-      document.body.setAttribute('data-hide-overflow', overflowHiddenCount + 1);
 
       setTimeout(() => this.setState({isHiding: false}));
     } else if (prevProps.show && !this.props.show) {
       this.setState({isHiding: true});
 
-      let overflowHiddenCount = parseInt(document.body.dataset.hideOverflow);
-      if (!overflowHiddenCount)
-        document.body.style.overflow = 'initial';
-      document.body.setAttribute('data-hide-overflow', overflowHiddenCount - 1);
+      document.body.style.overflow = 'initial';
 
       this.timeout = setTimeout(() => {
         this.setState({hidden: true});
@@ -67,12 +62,13 @@ export default class Modal extends React.Component {
         style={{
           containerOpacity: spring(this.state.isHiding ? 0 : 1, [580, 30]),
           opacity: spring(this.state.isHiding ? 0.01 : 1, [1500, 50]),
-          scale: spring(this.state.isHiding ? this.props.scaleBounce : 1, [400, 18])
+          scale: spring(this.state.isHiding ? this.props.scaleBounce : 1, [400, 18]),
+          y: spring(this.state.isHiding ? this.props.startY : 0, [400, 25])
         }}>
         {interpolation =>
           <div style={{...styles.modal, display: !this.state.hidden ? 'block' : 'none'}}>
             <div style={{...styles.modal, ...this.props.style, opacity: interpolation.opacity}} onClick={::this.hideOnOuterClick}/>
-            <div style={{...containerStyle, opacity: interpolation.containerOpacity, transform: `scale(${interpolation.scale})`}}>
+            <div style={{...containerStyle, opacity: interpolation.containerOpacity, transform: `scale(${interpolation.scale}) translateY(${interpolation.y}px)`}}>
               {this.props.children}
             </div>
           </div>

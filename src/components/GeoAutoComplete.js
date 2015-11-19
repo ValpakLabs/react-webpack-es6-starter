@@ -51,7 +51,7 @@ class GeoAutoComplete extends React.Component {
     const styles = {
       form: {
         border: this.props.narrow ? `1px solid ${colors.grey300}` : 0,
-
+        borderBottom: 0,
         padding: '0 12px',
         background: this.props.narrow ? colors.white : colors.grey50
       },
@@ -59,7 +59,7 @@ class GeoAutoComplete extends React.Component {
         border: 0,
         background: 'transparent',
         fontSize: 16,
-        lineHeight: '60px',
+        lineHeight: '24px',
         width: '100%',
         margin: '0 0 0 8px',
         padding: '6px 0',
@@ -69,7 +69,8 @@ class GeoAutoComplete extends React.Component {
         color: brand.tertiary
       },
       suggestionList: {
-        borderTop: `${this.props.narrow ? 0 : 1}px solid ${colors.grey300}`,
+        borderTop: `${this.props.narrow ? 0 : 0}px solid ${colors.grey300}`,
+        borderBottom: `${this.props.narrow ? 1 : 0}px solid ${colors.grey300}`,
         borderLeft: `${this.props.narrow ? 1 : 0}px solid ${colors.grey300}`,
         borderRight: `${this.props.narrow ? 1 : 0}px solid ${colors.grey300}`
       }
@@ -78,7 +79,7 @@ class GeoAutoComplete extends React.Component {
     return (
       <div>
         <form ref="geoChangeForm" style={styles.form} onSubmit={::this.handleGeoChangeSubmit}>
-          <Flex align='center'>
+          <Flex align='center' style={{height: 72}}>
             <Icon style={styles.markerIcon} name="location_on" />
             <input
               ref="geoInputField"
@@ -160,7 +161,6 @@ class GeoAutoComplete extends React.Component {
   }
 
   focus() {
-    console.log(this.refs.geoInputField);
     setTimeout(() => {
       this.refs.geoInputField.focus();
     })

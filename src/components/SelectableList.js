@@ -32,7 +32,7 @@ class SelectableList extends React.Component {
         listStyle: 'none',
         padding: '12px 16px',
         background: colors.white,
-        borderBottom: `1px solid ${colors.grey300}`,
+        borderTop: `1px solid ${colors.grey300}`,
         margin: 0,
         fontSize: 16,
         cursor: 'pointer'

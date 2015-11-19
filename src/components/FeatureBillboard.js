@@ -3,6 +3,7 @@ import colors, {brand} from '../theme/colors';
 import { Link } from 'react-router';
 import Flex from './Flex';
 import responsive from './responsive';
+import Collection from './Collection';
 
 const FeatureBillboard = (props, context) => {
   const size = context.viewportSize || props.size || 'xs';
@@ -15,14 +16,12 @@ const FeatureBillboard = (props, context) => {
   }[size];
 
   const styles = {
-    backgroundColor: colors.grey300,
-    color: colors.white,
-    height: height
+    ...props.style
   }
 
   return (
     <Flex style={styles} align='center' justify='center'>
-      <Link to='r/theme/thanksgiving'>Visit Promo Page</Link>
+      {props.children}
     </Flex>
   );
 };

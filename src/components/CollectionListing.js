@@ -95,11 +95,11 @@ class Listing extends Component {
   }
 
   enter() {
-    this.setState({expanded: true});
+    // this.setState({expanded: true});
   }
 
   leave() {
-    this.setState({expanded: false});
+    // this.setState({expanded: false});
   }
 }
 

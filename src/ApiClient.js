@@ -29,7 +29,7 @@ export default class ApiClient {
   }
 
   async fetchBalefirePage(splat) {
-    let uri = `${this.host}/proxy?url=http://localhost:7720/balefire/v1/valpak/pages/${splat}`;
+    let uri = `${this.host}/proxy?url=${this.clientConfig.balefireApiHost}/pages/${splat}`;
     let config = {
       method: 'get',
       ...this.config()
@@ -38,7 +38,7 @@ export default class ApiClient {
   }
 
   async fetchCollection(collectionId) {
-    let uri = `${this.host}/proxy?url=http://localhost:3000/collections/${collectionId}`;
+    let uri = `${this.host}/proxy?url=${this.clientConfig.collectionApiHost}/collections/${collectionId}`;
     let config = {
       method: 'get',
       ...this.config()
@@ -48,7 +48,7 @@ export default class ApiClient {
 
   async fetchListings(ids) {
     let qs = {id: ids};
-    let uri = `${this.host}/proxy?url=http://localhost:3000/listings?${qs}`;
+    let uri = `${this.host}/proxy?url=${this.clientConfig.collectionApiHost}/listings?${qs}`;
     let config = {
       method: 'get',
       ...this.config()

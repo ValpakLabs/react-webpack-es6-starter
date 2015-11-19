@@ -13,8 +13,8 @@ const FeaturedCategoryBar = (props, context) => {
   const {geo} = props;
 
   const styles = {
-    background: colors.grey50,
-    borderBottom: `1px solid ${colors.grey200}`,
+    background: colors.grey100,
+    borderBottom: `1px solid ${colors.grey300}`,
     padding: '12px 0'
   };
 
