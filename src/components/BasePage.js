@@ -16,7 +16,7 @@ class BasePage extends Component {
 
     return (
       <Flex direction='column' align='stretch' style={{background: colors.grey100, minHeight: '100vh'}}>
-        <BrandHeader user={user}/>
+        <BrandHeader user={user} viewportSize={viewportSize}/>
 
         {this.props.children}
       </Flex>

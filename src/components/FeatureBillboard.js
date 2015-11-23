@@ -6,7 +6,8 @@ import responsive from './responsive';
 import Collection from './Collection';
 
 const FeatureBillboard = (props, context) => {
-  const size = context.viewportSize || props.size || 'xs';
+  const size = props.viewportSize || props.size || 'xs';
+  const narrow = (size === 'xs' || size === 'sm');
 
   const height = {
     xs: 300,
@@ -17,7 +18,7 @@ const FeatureBillboard = (props, context) => {
 
   const styles = {
     ...props.style
-  }
+  };
 
   return (
     <Flex style={styles} align='center' justify='center'>
@@ -26,4 +27,4 @@ const FeatureBillboard = (props, context) => {
   );
 };
 
-export default responsive(FeatureBillboard);
+export default FeatureBillboard;

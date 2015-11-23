@@ -24,7 +24,7 @@ class BalefirePage extends Component {
       return React.createElement(template, {
         page,
         user,
-        viewportSize: this.props.viewportSize
+        viewportSize: viewportSize
       });
     } catch (error) {
       return <ErrorPage user={user} viewportSize={viewportSize} />;

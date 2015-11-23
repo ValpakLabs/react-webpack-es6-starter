@@ -16,7 +16,7 @@ import Dropdown from './Dropdown';
 class BrandHeader extends Component {
   render() {
     const {geo} = this.props.user;
-    let {viewportSize} = this.context;
+    let {viewportSize} = this.props;
     let narrow = viewportSize === 'xs' || viewportSize === 'sm';
 
     const styles = {
@@ -76,7 +76,7 @@ class BrandHeader extends Component {
 
               {viewportSize !== 'xs' && viewportSize !== 'sm' ?
                 <Flex align='stretch' justify='flex-end' flex={1}>
-                  <Search />
+                  <Search narrow={narrow}/>
 
                   <Dropdown
                     style={{marginRight: 12}}

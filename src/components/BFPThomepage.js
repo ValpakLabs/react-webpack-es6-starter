@@ -18,93 +18,119 @@ class BFPThomepage extends Component {
   render() {
     const page = this.props.page.toJS();
     const user = this.props.user.toJS();
-    const {zones} = page;
-    const collections = zones.collections || [];
+    const {zones, zones: {collections=[]}} = page;
     const {viewportSize} = this.props;
-    const isNarrow = (viewportSize === 'xs' || viewportSize === 'sm');
+    const narrow = (viewportSize === 'xs' || viewportSize === 'sm');
+
+    const styles = {
+      feature: {
+        marginBottom: 20,
+        padding: narrow ? '20px 0' : '40px 0 60px 0',
+        background: colors.white,
+        borderBottom: `1px solid ${colors.grey300}`
+      },
+      featureHeading: {
+        textAlign: 'center',
+        lineHeight: narrow ? '24px' : '48px',
+        margin: '0 0 20px 0',
+        color: colors.black
+      }
+    };
 
     return (
-      <BasePage user={this.props.user} viewportSize={viewportSize}>
+      <BasePage
+        user={this.props.user}
+        viewportSize={viewportSize}>
 
-        <FeatureBillboard style={{marginBottom: 20, padding: isNarrow ? '20px 0' : '40px 0 60px 0', background: colors.white, borderBottom: `1px solid ${colors.grey300}`, }}>
+        <Flex style={styles.feature}>
           <Container>
-            <div>
-              <Heading
-                level={isNarrow ? 3 : 1}
-                weight={500}
-                style={{textAlign: 'center', lineHeight: isNarrow ? '24px' : '48px', margin: '0 0 20px 0', color: colors.black}}>
-                {page.zones.primaryHeading.value.text}
-              </Heading>
-            </div>
+            <Heading
+              level={narrow ? 3 : 1}
+              weight={500}
+              style={styles.featureHeading}>
+              {zones.primaryHeading.value.text}
+            </Heading>
             <Collection
               viewportSize={viewportSize}
-              layout={{
-                lg: 'xtallboy',
-                md: 'xtallboy'
-              }}
-              items={page.zones.collections[0].items.slice(0, 3)}
-            />
+              layout={{lg: 'xtallboy', md: 'xtallboy'}}
+              items={collections[0].items.slice(0, 3)}/>
           </Container>
-        </FeatureBillboard>
+        </Flex>
 
-        <Container style={{marginBottom: 60}}>
-          {collections.length > 1 &&
+        {collections.length > 1 &&
+          <Container style={{marginBottom: 60}}>
             <Collection
               viewportSize={viewportSize}
               layout={{
-                lg: page.zones.collections[1].layout,
-                md: page.zones.collections[1].layout
+                lg: collections[1].layout,
+                md: collections[1].layout
               }}
-              title={page.zones.collections[1].title}
-              url={page.zones.collections[1].url}
-              items={page.zones.collections[1].items}
-            />}
-        </Container>
+              title={collections[1].title}
+              url={collections[1].url}
+              items={collections[1].items}/>
+          </Container>
+        }
 
-        <div style={{background: brand.altSecondary, padding: '10px 0 30px 0', marginBottom: 20}}>
-          <Container style={{}}>
-            {collections.length > 2 &&
-              <Flex style={{color: colors.white}} direction='column' align='center' justify='center'>
-
-                <Flex justify={isNarrow ? 'center' : 'space-between'} align='center' style={{marginBottom: isNarrow ? '1em' : '0'}}>
-                  <Heading
-                    pushEnds={1.5}
-                    weight={isNarrow ? 500 : 300}
-                    level={isNarrow ? 3 : 2}>
-                    {page.zones.collections[2].title}
-                  </Heading>
-                </Flex>
+        {collections.length > 2 &&
+          <div style={{
+              background: brand.altSecondary,
+              padding: '10px 0 30px 0',
+              marginBottom: 20
+            }}>
+            <Container>
+              <Flex
+                style={{color: colors.white}}
+                direction='column'
+                align='center'
+                justify='center'>
+                <Heading
+                  pushEnds={1.5}
+                  weight={narrow ? 500 : 300}
+                  level={narrow ? 3 : 2}>
+                  {collections[2].title}
+                </Heading>
                 <Collection
+                  items={collections[2].items}
                   viewportSize={viewportSize}
                   layout={{
-                    lg: page.zones.collections[2].layout,
-                    md: page.zones.collections[2].layout,
+                    lg: collections[2].layout,
+                    md: collections[2].layout,
                     sm: 'shotglass2',
                     xs: 'shotglass2'
-                  }}
-                  gutter={2}
-                  items={page.zones.collections[2].items}/>
-                {page.zones.collections[2].url &&
-                  <Flex alignSelf='stretch' justify='center' style={{margin: '20px 20px 0 20px'}}>
-                    <Button display={isNarrow ? 'block' : 'inline-block'} justify='center' iconRight={true} icon='arrow_forward' color={colors.white} fill={Color(colors.white).alpha(0.1).rgbaString()}>{page.zones.collections[2].buttonLabel}</Button>
+                  }}/>
+                {collections[2].url &&
+                  <Flex
+                    alignSelf='stretch'
+                    justify='center'
+                    style={{margin: '20px 20px 0 20px'}}>
+                    <Button
+                      display={narrow ? 'block' : 'inline-block'}
+                      justify='center' iconRight={true}
+                      icon='arrow_forward'
+                      color={colors.white}
+                      fill={Color(colors.white).alpha(0.1).rgbaString()}>
+                      {collections[2].buttonLabel}
+                    </Button>
                   </Flex>}
-              </Flex>}
-          </Container>
-        </div>
+              </Flex>
+            </Container>
+          </div>
+        }
 
-        <Container style={{marginBottom: 60}}>
-          {collections.length > 3 &&
+        {collections.length > 3 &&
+          <Container style={{marginBottom: 60}}>
             <Collection
               viewportSize={viewportSize}
               layout={{
-                lg: page.zones.collections[3].layout,
-                md: page.zones.collections[3].layout
+                lg: collections[3].layout,
+                md: collections[3].layout
               }}
-              title={page.zones.collections[3].title}
-              url={page.zones.collections[3].url}
-              items={page.zones.collections[3].items}
-            />}
-        </Container>
+              title={collections[3].title}
+              url={collections[3].url}
+              items={collections[3].items}
+            />
+          </Container>
+        }
 
         <MemberEmailHero viewportSize={viewportSize}/>
 
