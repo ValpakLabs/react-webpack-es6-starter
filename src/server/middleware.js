@@ -18,12 +18,15 @@ export default function (app) {
   const STATIC_DIR = path.join(__dirname, '../..', 'static');
 
   router.use((req, res, next) => {
-    console.log(req.url);
     next();
-  })
+  });
 
   router.use('/proxy/', (req, res, next) => {
-    proxy.web(req, res, {target: req.query.url})
+    proxy.web(req, res, {target: req.query.url});
+
+    proxy.on('error', error => {
+      next(error);
+    });
   });
 
   router.use(cookieParser());

@@ -22,7 +22,7 @@ class MemberEmailHero extends React.Component {
         padding: 0
       },
       innerContainer: {
-        padding: narrow ? '30px 0' : '40px 0',
+        padding: narrow ? '30px 0' : '60px 0',
         width: narrow ? 320 : 620
       }
     };

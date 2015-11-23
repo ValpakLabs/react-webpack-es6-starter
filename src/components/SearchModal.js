@@ -5,12 +5,14 @@ import Flex from './Flex';
 import Modal from './Modal';
 import Button from './Button';
 import Heading from './Heading';
-import GeoAutoComplete from './GeoAutoComplete';
+import Search from './Search';
 
-class GeoModal extends Component {
+class SearchModal extends Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.open && this.props.open)
-      setTimeout(() => this.refs.autoComplete.focus());
+      setTimeout(() => this.refs.search.focus());
+    if (!this.props.narrow && this.props.open)
+      this.context.closeModal('search');
   }
 
   render() {
@@ -54,28 +56,23 @@ class GeoModal extends Component {
         scaleBounce={narrow ? 1 : 1}
         startY={narrow ? 0 : -50}
         style={styles.container}
-        onClose={e => this.context.closeModal('geo')}
+        onClose={e => this.context.closeModal('search')}
         containerStyle={narrow ? styles.contentNarrow : styles.contentWide}>
 
         <div ref='modalContent'>
           <Flex align='center' justify='space-between' style={styles.header}>
-            <Heading level={narrow ? 4 : 3} style={{marginLeft: 10, marginRight: 10}}>Change Neighborhood</Heading>
+            <Search
+              ref='search'
+              narrow={narrow}/>
             <Button
-              className='close-geo-modal'
+              className='close-search-modal'
               ref='closeModalButton'
               icon='close'
               color={colors.grey500}
-              onClick={e => this.handleCloseModal('geo')}
-              onTouchEnd={e => this.handleCloseModal('geo')}/>
+              onTouchEnd={e => this.handleCloseModal('search')}/>
           </Flex>
 
-          <div style={{padding: narrow ? '20px' : '0'}}>
-            <GeoAutoComplete
-              ref='autoComplete'
-              narrow={narrow}
-              currentGeo={geo}
-              onGeoSelected={geo => this.setUserGeo(geo)} />
-          </div>
+
         </div>
 
       </Modal>
@@ -83,26 +80,17 @@ class GeoModal extends Component {
   }
 
   handleCloseModal(name) {
-    this.context.closeModal(name)
-  }
-
-  setUserGeo(geo) {
-    if (typeof geo !== 'string' && geo.city && geo.state)
-      geo = `${geo.city},%20${geo.state}`;
-    this.props.setGeo(geo);
-    this.context.closeModal('geo');
+    this.context.closeModal(name);
   }
 }
 
-GeoModal.contextTypes = {
+SearchModal.contextTypes = {
   closeModal: PropTypes.func
 };
 
-GeoModal.defaultProps = {
+SearchModal.defaultProps = {
   open: false,
-  narrow: false,
-  geo: {},
-  setGeo: e => null
-}
+  narrow: false
+};
 
-export default GeoModal;
+export default SearchModal;

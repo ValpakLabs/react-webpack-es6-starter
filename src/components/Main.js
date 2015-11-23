@@ -13,6 +13,7 @@ import Modal from './Modal';
 import Button from './Button';
 import BrandDrawer from './BrandDrawer';
 import GeoModal from './GeoModal';
+import SearchModal from './SearchModal';
 
 import '../scss/App.scss';
 
@@ -28,7 +29,8 @@ class Main extends Component {
     super(props);
     this.state = {
       brandDrawerOpen: false,
-      geoModalOpen: false
+      geoModalOpen: false,
+      searchModalOpen: false
     };
     this.handleViewportResize = debounce(this.handleViewportResize, 100).bind(this);
   }
@@ -56,7 +58,7 @@ class Main extends Component {
     const isNarrow = this.props.viewportSize === 'xs' || this.props.viewportSize === 'sm';
     const wasNarrow = prevProps.viewportSize === 'xs' || prevProps.viewportSize === 'sm';
     if (!isNarrow && wasNarrow && this.state.brandDrawerOpen)
-      this.setState({brandDrawerOpen: false})
+      this.setState({brandDrawerOpen: false});
   }
 
   render() {
@@ -91,26 +93,20 @@ class Main extends Component {
           open={this.state.geoModalOpen}
           narrow={isNarrow}
           setGeo={this.props.setUserGeo}/>
+
+        <SearchModal
+          open={this.state.searchModalOpen}
+          narrow={isNarrow}/>
       </div>
     );
   }
 
   toggleBrandDrawer() {
-    this.setState({brandDrawerOpen: !this.state.brandDrawerOpen}, () => {
-      let overflowHiddenCount = parseInt(document.body.dataset.hideOverflow) || 0;
-      if (this.state.brandDrawerOpen) {
-        // document.body.style.overflow = 'hidden';
-        // document.body.style.height = '100px';
-        // document.body.setAttribute('data-hide-overflow', overflowHiddenCount + 1);
-      } else {
-        // if (overflowHiddenCount === 1)
-        //   document.body.style.overflow = 'initial';
-        // document.body.setAttribute('data-hide-overflow', overflowHiddenCount - 1);
-      }
-    })
+    this.setState({brandDrawerOpen: !this.state.brandDrawerOpen});
   }
 
   openModal(name) {
+    console.log(name);
     this.setState({[`${name}ModalOpen`]: true});
   }
 
@@ -133,7 +129,7 @@ Main.fetchData = async (getState, dispatch, location, params) => {
       height: 1024
     }));
   }
-}
+};
 
 Main.contextTypes = {
   store: PropTypes.object.isRequired,

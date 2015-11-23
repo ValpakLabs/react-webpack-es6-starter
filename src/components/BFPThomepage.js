@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Color from 'color';
 import colors, {brand} from '../theme/colors';
-import responsive from './responsive';
+import BasePage from './BasePage';
 import Container from './Container';
 import BrandHeader from './BrandHeader';
 import FeatureBillboard from './FeatureBillboard';
@@ -14,7 +14,7 @@ import Collection from './Collection';
 import Icon from './Icon';
 import Button from './Button';
 
-class BTmpl_homepage extends Component {
+class BFPThomepage extends Component {
   render() {
     const page = this.props.page.toJS();
     const user = this.props.user.toJS();
@@ -24,10 +24,9 @@ class BTmpl_homepage extends Component {
     const isNarrow = (viewportSize === 'xs' || viewportSize === 'sm');
 
     return (
-      <div style={{background: colors.grey100}}>
-        <BrandHeader user={user}/>
+      <BasePage user={this.props.user} viewportSize={viewportSize}>
 
-        <FeatureBillboard style={{marginBottom: 20, padding: isNarrow ? '20px 0' : '40px 0 60px 0', background: colors.white, borderBottom: `1px solid ${colors.grey300}`,}}>
+        <FeatureBillboard style={{marginBottom: 20, padding: isNarrow ? '20px 0' : '40px 0 60px 0', background: colors.white, borderBottom: `1px solid ${colors.grey300}`, }}>
           <Container>
             <div>
               <Heading
@@ -48,8 +47,6 @@ class BTmpl_homepage extends Component {
           </Container>
         </FeatureBillboard>
 
-        {/*!isNarrow && <FeaturedCategoryBar geo={user.geo}/>*/}
-
         <Container style={{marginBottom: 60}}>
           {collections.length > 1 &&
             <Collection
@@ -64,10 +61,10 @@ class BTmpl_homepage extends Component {
             />}
         </Container>
 
-        <div style={{background: brand.altSecondary, padding: '10px 0 30px 0', marginBottom: 40}}>
+        <div style={{background: brand.altSecondary, padding: '10px 0 30px 0', marginBottom: 20}}>
           <Container style={{}}>
             {collections.length > 2 &&
-              <Flex style={{color: colors.white}} direction="column" align='center' justify='center'>
+              <Flex style={{color: colors.white}} direction='column' align='center' justify='center'>
 
                 <Flex justify={isNarrow ? 'center' : 'space-between'} align='center' style={{marginBottom: isNarrow ? '1em' : '0'}}>
                   <Heading
@@ -87,7 +84,10 @@ class BTmpl_homepage extends Component {
                   }}
                   gutter={2}
                   items={page.zones.collections[2].items}/>
-                {page.zones.collections[2].url && <Button style={{marginTop: 20}} display={isNarrow ? 'block' : 'inline-block'} justify='center' iconRight={true} icon='arrow_forward' color={colors.white} fill={Color(colors.white).alpha(0.1).rgbaString()}>{page.zones.collections[2].buttonLabel}</Button>}
+                {page.zones.collections[2].url &&
+                  <Flex alignSelf='stretch' justify='center' style={{margin: '20px 20px 0 20px'}}>
+                    <Button display={isNarrow ? 'block' : 'inline-block'} justify='center' iconRight={true} icon='arrow_forward' color={colors.white} fill={Color(colors.white).alpha(0.1).rgbaString()}>{page.zones.collections[2].buttonLabel}</Button>
+                  </Flex>}
               </Flex>}
           </Container>
         </div>
@@ -112,9 +112,9 @@ class BTmpl_homepage extends Component {
 
         </div>
 
-      </div>
+      </BasePage>
     );
   }
 }
 
-export default BTmpl_homepage;
+export default BFPThomepage;

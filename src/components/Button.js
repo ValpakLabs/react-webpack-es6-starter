@@ -31,6 +31,12 @@ class Button extends React.Component {
     onClick: function() {}
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevProps.nohover && this.props.nohover) {
+      this.setState({hover: false});
+    }
+  }
+
   render() {
     const {disabled, children, icon, size, color, fab, title} = this.props;
 
@@ -53,7 +59,7 @@ class Button extends React.Component {
     return (
       <button
         title={title}
-        className={this.props.showOnHover ? 'show-on-hover' : ''}
+        className={this.props.className}
         style={baseStyles}
         disabled={disabled}
         onMouseEnter={::this.mouseEnter}
@@ -62,7 +68,8 @@ class Button extends React.Component {
         onMouseUp={::this.mouseUp}
         onFocus={::this.onFocus}
         onBlur={::this.onBlur}
-        onClick={::this.handleClick}>
+        onClick={::this.handleClick}
+        onTouchEnd={::this.handleTouchEnd}>
 
         <div style={styles.inner}>
           {icon && !this.props.iconRight && iconComponent}
@@ -77,6 +84,12 @@ class Button extends React.Component {
   handleClick(e) {
     if (this.props.disabled) return;
     this.props.onClick(e);
+  }
+
+  handleTouchEnd(e) {
+    e.preventDefault();
+    if (this.props.disabled) return;
+    this.props.onTouchEnd(e);
   }
 
   mouseEnter() {

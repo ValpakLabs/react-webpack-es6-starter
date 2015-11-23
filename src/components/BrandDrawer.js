@@ -49,7 +49,7 @@ class BrandDrawer extends Component {
             weight: 600,
             color: colors.white,
             style: {fontSize: 14},
-            onClick: e => this.context.openModal('geo')
+            onTouchEnd: e => this.context.openModal('geo')
           }}>
             {`${geo.city}, ${geo.state} ${geo.postalCode}`}
           </Button>
@@ -63,6 +63,6 @@ class BrandDrawer extends Component {
 
 BrandDrawer.contextTypes = {
   openModal: PropTypes.func
-}
+};
 
 export default BrandDrawer;

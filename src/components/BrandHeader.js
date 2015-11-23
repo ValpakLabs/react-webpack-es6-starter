@@ -70,7 +70,7 @@ class BrandHeader extends Component {
               justify={'space-between'}>
 
               {(viewportSize === 'xs' || viewportSize === 'sm') &&
-                <Button icon='menu' color={colors.white} onClick={e => this.context.toggleBrandDrawer()}/>}
+                <Button icon='menu' color={colors.white} onTouchEnd={e => this.context.toggleBrandDrawer()}/>}
 
               <BrandLogo />
 
@@ -80,40 +80,58 @@ class BrandHeader extends Component {
 
                   <Dropdown
                     style={{marginRight: 12}}
-                    label='Browse'
+                    width={180}
+                    label='Browse Coupons'
                     buttonProps={{
                       fill: brand.tertiary,
                       color: colors.white,
                       icon: 'arrow_drop_down'
                     }}
+                    openButtonProps={{
+                      fill: colors.white,
+                      color: colors.black
+                    }}
                     dropdownStyles={{
-                      color: colors.white,
-                      background: Color(brand.tertiary).lighten(0.05).rgbaString()
+                      color: colors.black,
+                      background: colors.white
                     }}>
                     <div>
-                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.15)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={6} name='chevron_right'/> <div>In-Store Coupons</div></Flex>
-                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.15)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={6} name='chevron_right'/> <div>Online Codes</div></Flex>
-                      <Flex style={{padding: '10px 8px'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={6} name='chevron_right'/> <div>Grocery Coupons</div></Flex>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>In-Store</div></Flex>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Online</div></Flex>
+                      <Flex style={{padding: '10px 8px'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Grocery</div></Flex>
                     </div>
                   </Dropdown>
 
                   <Dropdown
+                    width={180}
                     label='Categories'
                     buttonProps={{
                       fill: brand.tertiary,
                       color: colors.white,
                       icon: 'arrow_drop_down'
                     }}
+                    openButtonProps={{
+                      fill: colors.white,
+                      color: colors.black
+                    }}
                     dropdownStyles={{
-                      color: colors.white,
-                      background: brand.tertiary,
-                      padding: 20
+                      color: colors.black,
+                      background: colors.white
                     }}>
-                    <div>Check me out!</div>
+                    <div>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Automotive</div></Flex>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Restaurants</div></Flex>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Personal Care</div></Flex>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Health</div></Flex>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Entertainment</div></Flex>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Home & Office</div></Flex>
+                      <Flex style={{padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>General Services</div></Flex>
+                      <Flex style={{padding: '10px 8px'}} align='center'><Icon fill={colors.lightgreen500} size={16} pushRight={4} name='chevron_right'/> <div>Grocery</div></Flex>
+                    </div>
                   </Dropdown>
 
                 </Flex> :
-                <Button icon='search' color={colors.white}/>}
+                <Button icon='search' color={colors.white} onTouchEnd={e => this.context.openModal('search')}/>}
             </Flex>
 
             <Flyout
@@ -132,7 +150,7 @@ class BrandHeader extends Component {
           </Container>
         </Header>
       </Flex>
-    )
+    );
   };
 }
 
@@ -140,6 +158,6 @@ BrandHeader.contextTypes = {
   viewportSize: PropTypes.string,
   toggleBrandDrawer: PropTypes.func,
   openModal: PropTypes.func
-}
+};
 
 export default BrandHeader;

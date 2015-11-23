@@ -7,68 +7,54 @@ export default class Modal extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      isHiding: true,
+      leaving: true,
       hidden: true
     };
   }
 
   componentDidMount() {
-    if (this.props.show) {
-      this.setState({hidden: false});
-      setTimeout(() => this.setState({isHiding: false}));
-    }
+    if (this.props.show)
+      this.show();
   }
 
-  hideOnOuterClick(event) {
-    if (!this.props.closeOnOuterClick || this.state.isHiding) return;
+  componentWillUnmount() {
+    document.body.style.overflow = 'initial';
+  }
 
-    if (typeof this.props.onClose === 'function') {
-      this.setState({isHiding: true});
-
-      setTimeout(() => {
-        this.props.onClose(event);
-      }, this.props.closeDelay);
-
-      setTimeout(() => {
-        this.setState({hidden: true});
-      }, this.props.closeDelay);
-    }
+  handleBackdropClick(event) {
+    if (!this.props.closeOnOuterClick || this.state.leaving)
+      return;
+    this.hide();
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.show && this.props.show) {
-      clearTimeout(this.timeout);
-      this.setState({hidden: false});
-
-      document.body.style.overflow = 'hidden';
-
-      setTimeout(() => this.setState({isHiding: false}));
-    } else if (prevProps.show && !this.props.show) {
-      this.setState({isHiding: true});
-
-      document.body.style.overflow = 'initial';
-
-      this.timeout = setTimeout(() => {
-        this.setState({hidden: true});
-      }, this.props.closeDelay);
-    }
+    if (!prevProps.show && this.props.show)
+      this.show();
+    if (prevProps.show && !this.props.show)
+      this.hide();
   }
 
   render() {
-    const containerStyle = Object.assign({}, styles.container, this.props.containerStyle);
+    if (this.state.hidden) return null;
+
+    const containerStyle = Object.assign({},
+      styles.container,
+      this.props.containerStyle
+    );
 
     return (
       <Motion
+        ref='motion'
         style={{
-          containerOpacity: spring(this.state.isHiding ? 0 : 1, [580, 30]),
-          opacity: spring(this.state.isHiding ? 0.01 : 1, [1500, 50]),
-          scale: spring(this.state.isHiding ? this.props.scaleBounce : 1, [400, 18]),
-          y: spring(this.state.isHiding ? this.props.startY : 0, [400, 25])
+          containerOpacity: spring(this.state.leaving ? 0 : 1, [580, 30]),
+          opacity: spring(this.state.leaving ? 0.01 : 1, [1500, 50]),
+          scale: spring(this.state.leaving ? this.props.scaleBounce : 1, [400, 18]),
+          y: spring(this.state.leaving ? this.props.startY : 0, [400, 25])
         }}>
         {interpolation =>
-          <div style={{...styles.modal, display: !this.state.hidden ? 'block' : 'none'}}>
-            <div style={{...styles.modal, ...this.props.style, opacity: interpolation.opacity}} onClick={::this.hideOnOuterClick}/>
-            <div style={{...containerStyle, opacity: interpolation.containerOpacity, transform: `scale(${interpolation.scale}) translateY(${interpolation.y}px)`}}>
+          <div ref='wrapper' style={{...styles.modal, display: !this.state.hidden ? 'block' : 'none'}}>
+            <div ref='backdrop' style={{...styles.modal, ...this.props.style, opacity: interpolation.opacity}} onClick={::this.handleBackdropClick}/>
+            <div ref='modal' style={{...containerStyle, opacity: interpolation.containerOpacity, transform: `scale(${interpolation.scale}) translateY(${interpolation.y}px)`}}>
               {this.props.children}
             </div>
           </div>
@@ -77,9 +63,29 @@ export default class Modal extends React.Component {
     );
   }
 
+  show() {
+    document.body.style.overflow = 'hidden';
+    clearTimeout(this.timeout);
+    this.setState({hidden: false});
+    setTimeout(() => this.setState({leaving: false}));
+  }
+
+  hide() {
+    document.body.style.overflow = 'initial';
+    this.setState({leaving: true});
+    this.timeout = setTimeout(() => {
+      this.setState({hidden: true});
+      this.props.onClose();
+    }, this.props.closeDelay);
+  }
+
 }
 
 Modal.defaultProps = {
+  show: false,
+  closeOnOuterClick: true,
   closeDelay: 200,
-  scaleBounce: 0.9
+  scaleBounce: 0.9,
+  startY: -50,
+  onClose: e => null
 };
