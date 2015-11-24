@@ -10,26 +10,47 @@ function render(props = {}) {
 
 describe('Component: GeoModal', () => {
 
-  it('should not render anything initially', () => {
-    let c = render();
-    expect(() => TestUtils.findRenderedComponentWithType(c, Modal)).toThrow(/Did not find exactly one match for componentType:function Modal/)
-  });
-
   it('should render modal and content', () => {
     let c = render({open: true});
-    expect(TestUtils.findRenderedComponentWithType(c, Modal)).toExist()
+    expect(TestUtils.findRenderedComponentWithType(c, Modal)).toExist();
   });
 
   it('should handle setting geo', () => {
     let c = render({
       open: true,
       narrow: false,
-      geo: {city: 'New York', state: 'NY'},
-      setGeo: expect.createSpy()
+      user: {geo: {city: 'New York', state: 'NY'}},
+      setGeo: expect.createSpy().andReturn(Promise.resolve())
     });
     c.context.closeModal = () => null;
     c.refs.autoComplete.props.onGeoSelected({city: 'Tampa', state: 'FL'});
     expect(c.props.setGeo).toHaveBeenCalledWith('Tampa,%20FL');
+  });
+
+  it('should close modal when geo change successful', () => {
+    let c = render({
+      open: true,
+      narrow: false,
+      user: {geo: {city: 'New York', state: 'NY'}},
+      setGeo: expect.createSpy().andReturn(Promise.resolve())
+    });
+    c.context.closeModal = expect.createSpy();
+    c.refs.autoComplete.props.onGeoSelected({city: 'Tampa', state: 'FL'});
+    expect(c.props.setGeo).toHaveBeenCalled();
+  });
+
+  it('should not close modal when geoValidationError present', () => {
+    let c = render({
+      open: true,
+      narrow: false,
+      user: {
+        geoValidationError: 'invalid geo'
+      },
+      setGeo: expect.createSpy().andReturn(Promise.resolve())
+    });
+    c.context.closeModal = expect.createSpy();
+    c.refs.autoComplete.props.onGeoSelected({city: 'Tampa', state: 'FL'});
+    expect(c.context.closeModal).toNotHaveBeenCalled();
   });
 
   it('should have a button that closes modal', () => {

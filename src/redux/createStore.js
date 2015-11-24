@@ -8,6 +8,7 @@ import {
 import {
   promiseMiddleware,
   thunkMiddleware,
+  errorLogger
 } from './middleware';
 
 import Immutable from 'immutable';
@@ -16,7 +17,7 @@ import logger from 'redux-logger';
 export default function (client, data) {
   try {
     const middleware = __DEVELOPMENT__ && __CLIENT__ ?
-      applyMiddleware(promiseMiddleware(client), thunkMiddleware, logger({
+      applyMiddleware(promiseMiddleware(client), thunkMiddleware, errorLogger, logger({
         collapsed: true,
         duration: true,
         transformer: (state) => {
@@ -28,10 +29,11 @@ export default function (client, data) {
               newState[i] = state[i];
             }
           };
+
           return newState;
         }
       })) :
-      applyMiddleware(promiseMiddleware(client), thunkMiddleware)
+      applyMiddleware(promiseMiddleware(client), thunkMiddleware, errorLogger);
 
     const createCustomStore = compose(middleware)(createStore);
 

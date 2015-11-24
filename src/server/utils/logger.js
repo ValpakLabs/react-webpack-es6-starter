@@ -13,7 +13,7 @@ var customLevels = {
     debug: 'blue',
     info: 'green',
     baz: 'yellow',
-    error: 'green',
+    error: 'red',
     dispatch: 'grey'
   }
 };
@@ -36,7 +36,29 @@ const logger = new (winston.Logger)({
   ]
 });
 
+winston.loggers.add('access', {
+  console: {
+    level: 'info',
+    colorize: true,
+    label: 'access'
+  },
+  file: {
+    filename: 'access.log'
+  }
+});
 
-
+winston.loggers.add('error', {
+  console: {
+    level: 'silly',
+    colorize: true,
+    label: 'error'
+  },
+  file: {
+    filename: 'error.log',
+    handleExceptions: true,
+    humanReadableUnhandledException: true,
+    prettyPrint: true
+  }
+});
 
 export default logger;

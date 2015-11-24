@@ -26,9 +26,9 @@ export default async (req, res, next) => {
     if (config.serverRendering) {
       match({ routes: getRoutes(store), location: req.url }, async (error, redirectLocation, renderProps) => {
         if (error) {
-          res.send(500, error.message)
+          res.send(500, error.message);
         } else if (redirectLocation) {
-          res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+          res.redirect(302, redirectLocation.pathname + redirectLocation.search);
         } else if (renderProps) {
           try {
             await* prefetchData(
@@ -50,7 +50,7 @@ export default async (req, res, next) => {
             next(error);
           }
         } else {
-          next(new NotFoundError())
+          next(new NotFoundError());
         }
       });
     } else {

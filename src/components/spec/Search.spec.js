@@ -3,11 +3,27 @@ import TestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import Search from '../Search';
 
+let next = expect.createSpy();
+let prev = expect.createSpy();
+let selectSuggestion = expect.createSpy();
+
+const SearchSuggest = React.createClass({
+  render: () => {
+    return <div/>;
+  },
+
+  next: next,
+  prev: prev,
+  selectSuggestion: selectSuggestion
+});
+
+Search.__Rewire__('SearchSuggest', SearchSuggest);
+
 function render(props) {
   return TestUtils.renderIntoDocument(<Search {...props} />);
 }
 
-describe.only('Component: Search', function() {
+describe('Component: Search', function() {
   it('should render a form and input element', () => {
     let c = render();
     expect(c.refs.form).toExist();
@@ -17,7 +33,7 @@ describe.only('Component: Search', function() {
   it('should render a submit button when not narrow', () => {
     let c = render();
     expect(c.refs.submit).toNotExist();
-    c = render({narrow: false})
+    c = render({narrow: false});
     expect(c.refs.submit).toExist();
   });
 
@@ -44,7 +60,7 @@ describe.only('Component: Search', function() {
     setTimeout(() => {
       expect(c.state.hasFocus).toBe(false);
       done();
-    }, 100)
+    }, 100);
   });
 
   it('should handle text input change and save to state', () => {
@@ -61,17 +77,19 @@ describe.only('Component: Search', function() {
   it('should handle down arrow press', () => {
     let c = render();
     TestUtils.Simulate.focus(c.refs.input);
-    expect.spyOn(c.refs.suggestions, 'next');
+
+    // expect.spyOn(c.refs.suggestions, 'next');
     TestUtils.Simulate.keyUp(c.refs.input, {keyCode: 40});
-    expect(c.refs.suggestions.next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
   });
 
   it('should handle up arrow press', () => {
     let c = render();
     TestUtils.Simulate.focus(c.refs.input);
-    expect.spyOn(c.refs.suggestions, 'prev');
+
+    // expect.spyOn(c.refs.suggestions, 'prev');
     TestUtils.Simulate.keyUp(c.refs.input, {keyCode: 38});
-    expect(c.refs.suggestions.prev).toHaveBeenCalled();
+    expect(prev).toHaveBeenCalled();
   });
 
   it('should handle suggestions focus', () => {
@@ -95,7 +113,9 @@ describe.only('Component: Search', function() {
     expect.spyOn(c, 'handleSuggestionSelection');
     TestUtils.Simulate.focus(c.refs.input);
     TestUtils.Simulate.keyUp(c.refs.input, {keyCode: 13});
-    expect(c.handleSuggestionSelection).toHaveBeenCalled();
+    expect(selectSuggestion).toHaveBeenCalled();
+    c.refs.suggestions.props.onSuggestionSelection('foo');
+    expect(c.handleSuggestionSelection).toHaveBeenCalledWith('foo');
   });
 
   it('should submit input term when no suggestion', () => {
@@ -103,7 +123,7 @@ describe.only('Component: Search', function() {
     expect.spyOn(c, 'handleSubmit').andCallThrough();
     TestUtils.Simulate.focus(c.refs.input);
     TestUtils.Simulate.change(c.refs.input, {target: {value: 'poobah'}});
-    TestUtils.Simulate.keyUp(c.refs.input, {keyCode: 13});
+    c.refs.suggestions.props.onSuggestionSelection();
     expect(c.handleSubmit).toHaveBeenCalled();
     expect(c.props.onSubmit).toHaveBeenCalledWith('poobah');
   });
@@ -119,3 +139,75 @@ describe.only('Component: Search', function() {
     expect(window.location.href).toEqual('http://www.valpak.com/');
   });
 });
+
+//
+// shallow rendering for later
+//
+// function setup(_props) {
+//   let props = {
+//     onChange: expect.createSpy(),
+//     ..._props
+//   };
+//
+//   let renderer = TestUtils.createRenderer();
+//   renderer.render(<Search {...props} />);
+//   let output = renderer.getRenderOutput();
+//
+//   return {
+//     props,
+//     output,
+//     renderer
+//   };
+// }
+//
+// it('should only render a form and input element by default', () => {
+//   let {output} = setup();
+//   let [ form, button, suggestions ] = output.props.children;
+//   let input = form.props.children;
+//   expect(form.type).toEqual('form');
+//   expect(input.type).toEqual('input');
+//   expect(button).toNotExist();
+//   expect(suggestions).toNotExist();
+// });
+//
+// it('should render a submit button when not narrow', () => {
+//   let {output} = setup({narrow: false});
+//   let [ form, button ] = output.props.children;
+//   expect(button.type).toEqual(Button);
+// });
+//
+// it('should only render suggestions when focused', () => {
+//   let {output, renderer} = setup();
+//   output.props.onFocus();
+//   output = renderer.getRenderOutput();
+//   let [ form, button, suggestions ] = output.props.children;
+//   expect(suggestions.type).toEqual('div');
+//   expect(suggestions.props.children.type).toEqual(SearchSuggest);
+// });
+//
+// it('should wait 100ms to remove focus state', (done) => {
+//   let {output, renderer} = setup();
+//   output.props.onFocus();
+//   output = renderer.getRenderOutput();
+//   output.props.onBlur();
+//   output = renderer.getRenderOutput();
+//   expect(output.props.children[2]).toExist();
+//   setTimeout(() => {
+//     output = renderer.getRenderOutput();
+//     expect(output.props.children[2]).toNotExist();
+//     done();
+//   }, 100);
+// });
+//
+// it('should handle text input change', () => {
+//   let {output, props, renderer} = setup();
+//   let form = output.props.children[0];
+//   let input = form.props.children;
+//   output.props.onFocus();
+//   input.props.onChange({target: {value: 'foobar'}});
+//   expect(props.onChange).toHaveBeenCalledWith('foobar');
+//
+//   output = renderer.getRenderOutput();
+//   let suggestions = output.props.children[2];
+//   expect(suggestions.props.children.props.term).toEqual('foobar');
+// });

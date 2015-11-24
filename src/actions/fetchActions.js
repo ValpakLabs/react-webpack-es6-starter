@@ -21,8 +21,12 @@ export function fetchBalefirePage(splat) {
         return zones;
       }, {});
 
-      if (page.zones.hasOwnProperty('collections'))
-        page.zones.collections = await resolveCollections(page.zones.collections.value.items, client);
+      try {
+        if (page.zones.hasOwnProperty('collections'))
+          page.zones.collections = await resolveCollections(page.zones.collections.value.items, client);
+      } catch (error) {
+        return page;
+      }
 
       return page;
     }
@@ -39,31 +43,59 @@ export function fetchCollection(collectionId) {
   };
 }
 
+/**
+ * Fetch all collections and resolve its listings if present.
+ */
 async function resolveCollections(collectionIds, client) {
-  let collections = await* collectionIds.map(id => client.fetchCollection(id));
-  collections = await resolveCollectionListings(collections, client);
-  return collections;
+  let collections = await* collectionIds.map(id =>
+    fetchCollectionWithoutFail(id, client));
+
+  let listingIds = getAllListingIds(collections);
+  let listings = await client.fetchListings(listingIds);
+
+  return await joinCollectionListings(collections, listings);
 }
 
-async function resolveCollectionListings(collections, client) {
-  const listingIds = collections.reduce((listingIds, collection) => {
+/**
+ * Fetch and return single collection. Return `undefined` if collection
+ * can't be found. Should catch rejected fetch and always resolve.
+ */
+async function fetchCollectionWithoutFail(id, client) {
+  try {
+    return await client.fetchCollection(id);
+  } catch (e) {
+    return undefined;
+  }
+}
+
+/**
+ * Consolidate all listing IDs in all collections.
+ */
+function getAllListingIds(collections) {
+  return collections.reduce((listingIds, collection) => {
+    if (!collection)
+      return listingIds;
+
     for (let item of collection.items) {
       if (item.type === 'LOCAL_OFFER' || item.type === 'NATL_OFFER')
         listingIds.push(item.offerId);
     }
+
     return listingIds;
   }, []);
+}
 
-  if (listingIds.length) {
-    let listings = await client.fetchListings(listingIds);
-    collections.forEach(collection => {
-      collection.items.forEach(item => {
-        if (item.type === 'LOCAL_OFFER' || item.type === 'NATL_OFFER') {
-          item.listing = listings.find(listing => listing.id == item.offerId);
-        }
-      })
+/**
+ * Place each listing into the collection it was referenced from.
+ */
+async function joinCollectionListings(collections, listings) {
+  return collections.map(collection => {
+    if (!collection) return;
+    collection.items.forEach(item => {
+      if (item.type === 'LOCAL_OFFER' || item.type === 'NATL_OFFER') {
+        item.listing = listings.find(listing => listing.id == item.offerId);
+      }
     });
-  }
-
-  return collections;
+    return collection;
+  });
 }

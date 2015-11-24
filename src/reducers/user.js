@@ -9,7 +9,8 @@ import {
 
 const initialState = {
   device: {},
-  geo: {}
+  geo: {},
+  geoValidationError: null
 };
 
 function loadUserDevice(state, {payload}) {
@@ -17,7 +18,7 @@ function loadUserDevice(state, {payload}) {
 }
 
 function setUserGeo(state, {payload}) {
-  return state;
+  return state.set('geoValidationError', null);
 }
 
 function setUserGeoSuccess(state, {payload}) {
@@ -25,7 +26,7 @@ function setUserGeoSuccess(state, {payload}) {
 }
 
 function setUserGeoFail(state, action) {
-  return state;
+  return state.set('geoValidationError', action.payload.message);
 }
 
 export default function viewport(state = initialState, action) {

@@ -24,7 +24,6 @@ class BFPThomepage extends Component {
 
     const styles = {
       feature: {
-        marginBottom: 20,
         padding: narrow ? '20px 0' : '40px 0 60px 0',
         background: colors.white,
         borderBottom: `1px solid ${colors.grey300}`
@@ -42,23 +41,25 @@ class BFPThomepage extends Component {
         user={this.props.user}
         viewportSize={viewportSize}>
 
-        <Flex style={styles.feature}>
-          <Container>
-            <Heading
-              level={narrow ? 3 : 1}
-              weight={500}
-              style={styles.featureHeading}>
-              {zones.primaryHeading.value.text}
-            </Heading>
-            <Collection
-              viewportSize={viewportSize}
-              layout={{lg: 'xtallboy', md: 'xtallboy'}}
-              items={collections[0].items.slice(0, 3)}/>
-          </Container>
-        </Flex>
+        {collections[0] &&
+          <Flex style={styles.feature}>
+            <Container>
+              <Heading
+                level={narrow ? 3 : 1}
+                weight={500}
+                style={styles.featureHeading}>
+                {zones.primaryHeading.value.text}
+              </Heading>
+              <Collection
+                viewportSize={viewportSize}
+                layout={{lg: 'xtallboy', md: 'xtallboy'}}
+                items={collections[0].items.slice(0, 3)}/>
+            </Container>
+          </Flex>
+        }
 
-        {collections.length > 1 &&
-          <Container style={{marginBottom: 60}}>
+        {collections[1] &&
+          <Container style={{padding: '40px 0', marginBottom: 20}}>
             <Collection
               viewportSize={viewportSize}
               layout={{
@@ -71,11 +72,10 @@ class BFPThomepage extends Component {
           </Container>
         }
 
-        {collections.length > 2 &&
+        {collections[2] &&
           <div style={{
               background: brand.altSecondary,
-              padding: '10px 0 30px 0',
-              marginBottom: 20
+              padding: '24px 0 30px 0'
             }}>
             <Container>
               <Flex
@@ -86,7 +86,8 @@ class BFPThomepage extends Component {
                 <Heading
                   pushEnds={1.5}
                   weight={narrow ? 500 : 300}
-                  level={narrow ? 3 : 2}>
+                  level={narrow ? 3 : 2}
+                  style={{marginBottom: 24}}>
                   {collections[2].title}
                 </Heading>
                 <Collection
@@ -117,8 +118,8 @@ class BFPThomepage extends Component {
           </div>
         }
 
-        {collections.length > 3 &&
-          <Container style={{marginBottom: 60}}>
+        {collections[3] &&
+          <Container style={{padding: '40px 0', marginBottom: 20}}>
             <Collection
               viewportSize={viewportSize}
               layout={{

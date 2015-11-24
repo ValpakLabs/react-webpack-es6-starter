@@ -7,7 +7,7 @@ const defaultProps = {
   weight: 300,
   color: 'inherit',
   textAlign: 'left'
-}
+};
 
 const sizes = {
   1: 36,
@@ -27,8 +27,7 @@ const Heading = (props, context) => {
     color: props.color,
     fontSize: fontSize,
     lineHeight: props.lineHeight || `${fontSize / 24}em`,
-    marginTop: props.pushEnds * fontSize / 2,
-    marginBottom: props.pushEnds * fontSize / 2,
+    margin: 0,
     fontWeight: props.weight,
     flex: props.flex,
     textAlign: props.textAlign,
@@ -40,4 +39,4 @@ const Heading = (props, context) => {
   );
 };
 
-export default Heading
+export default Heading;

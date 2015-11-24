@@ -4,7 +4,7 @@ import TestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import Modal from '../Modal';
 
-let node = document.createElement('div')
+let node = document.createElement('div');
 
 function render(props = {}) {
   return ReactDOM.render(<Modal {...props}/>, node);
@@ -26,13 +26,9 @@ describe('Component: Modal', () => {
     expect(c.props.onClose).toBeA(Function);
   });
 
-  it('should render with no display', () => {
+  it('should not render anything initially', () => {
     let c = render();
-    let wrapper = c.refs.motion.refs.wrapper;
-    expect(wrapper).toExist();
-    expect(wrapper.children[0]).toExist();
-    expect(wrapper.children[1]).toExist();
-    expect(wrapper.style.display).toEqual('none');
+    expect(c.refs).toEqual({});
   });
 
   it('should unhide itself before transitioning in', (done) => {
@@ -50,8 +46,8 @@ describe('Component: Modal', () => {
 
   it('should show and hide on prop change w/ delay', (done) => {
     let c = render();
-    let wrapper = c.refs.motion.refs.wrapper;
     render({show: true});
+    let wrapper = c.refs.motion.refs.wrapper;
     expect(c.state.hidden).toBe(false);
     setTimeout(() => {
       expect(c.state.leaving).toBe(false);
@@ -61,12 +57,12 @@ describe('Component: Modal', () => {
       setTimeout(() => {
         expect(c.state.hidden).toBe(true);
         done();
-      }, c.props.closeDelay)
+      }, c.props.closeDelay);
     });
   });
 
   it('should render passed-in children', () => {
-    let c = render({children: <div>Hello</div>});
+    let c = render({show: true, children: <div>Hello</div>});
     let wrapper = c.refs.motion.refs.wrapper;
     expect(wrapper.children[1].children[0].textContent).toEqual('Hello');
   });

@@ -4,7 +4,6 @@ import expect from 'expect';
 import GeoAutoComplete from '../GeoAutoComplete';
 import SelectableList from '../SelectableList';
 
-
 function render(props = {}) {
   return TestUtils.renderIntoDocument(<GeoAutoComplete {...props}/>);
 }
@@ -26,7 +25,7 @@ describe('Component: GeoAutoComplete', function() {
 
   afterEach(() => {
     expect.restoreSpies();
-  })
+  });
 
   it('should render geo input form', function() {
     let c = render();
@@ -43,12 +42,24 @@ describe('Component: GeoAutoComplete', function() {
     expect(c.state.geoSearchTerm).toBe('foo');
   });
 
+  it('should reset selectedIndex on input change', () => {
+    let c = render();
+    expect.spyOn(c, 'setState').andCallThrough();
+    TestUtils.Simulate.change(c.refs.geoInputField, {target: {value: 'foo'}});
+    expect(c.setState).toHaveBeenCalledWith({
+      geoSearchTerm: 'foo',
+      selectedIndex: -1
+    });
+  });
+
   it('should fetch suggestions from server on input change', () => {
     let c = render();
     expect.spyOn(c, 'getSuggestions').andCallThrough();
     TestUtils.Simulate.change(c.refs.geoInputField, {target: {value: 'foo'}});
     expect(c.getSuggestions).toHaveBeenCalledWith('foo');
-    expect(fetch).toHaveBeenCalledWith(`${c.props.url}?term=foo&count=${c.props.itemCount}`);
+    expect(fetch).toHaveBeenCalledWith(
+      `${c.props.url}?term=foo&count=${c.props.itemCount}`
+    );
   });
 
   it('should handle suggestions returned from server', (done) => {
@@ -113,9 +124,15 @@ describe('Component: GeoAutoComplete', function() {
   it('should handle selecting a geo', () => {
     let c = render({onGeoSelected: expect.createSpy()});
     c.setState({geoResults: mockSuggestionList});
-    let list = TestUtils.findRenderedComponentWithType(c, SelectableList)
+    let list = TestUtils.findRenderedComponentWithType(c, SelectableList);
     list.props.onItemSelected(0);
     expect(c.props.onGeoSelected).toHaveBeenCalledWith(mockSuggestionList[0]);
+  });
+
+  it('should render error message', () => {
+    let c = render({error: 'invalid geo'});
+    expect(c.refs.error).toExist();
+    expect(c.refs.error.textContent).toContain('invalid geo');
   });
 
 });

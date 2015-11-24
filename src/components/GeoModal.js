@@ -14,7 +14,8 @@ class GeoModal extends Component {
   }
 
   render() {
-    const {open, narrow, geo} = this.props;
+    const {open, narrow, user} = this.props;
+    const geo = user.geo;
 
     const styles = {
       container: {
@@ -51,7 +52,7 @@ class GeoModal extends Component {
         ref='modal'
         show={open}
         closeOnOuterClick={true}
-        scaleBounce={narrow ? 1 : 1}
+        scaleBounce={1}
         startY={narrow ? 0 : -50}
         style={styles.container}
         onClose={e => this.context.closeModal('geo')}
@@ -59,7 +60,11 @@ class GeoModal extends Component {
 
         <div ref='modalContent'>
           <Flex align='center' justify='space-between' style={styles.header}>
-            <Heading level={narrow ? 4 : 3} style={{marginLeft: 10, marginRight: 10}}>Change Neighborhood</Heading>
+            <Heading
+              level={narrow ? 4 : 3}
+              style={{margin: '0 10px'}}>
+              Change Neighborhood
+            </Heading>
             <Button
               className='close-geo-modal'
               ref='closeModalButton'
@@ -72,6 +77,7 @@ class GeoModal extends Component {
           <div style={{padding: narrow ? '20px' : '0'}}>
             <GeoAutoComplete
               ref='autoComplete'
+              error={this.props.user.geoValidationError}
               narrow={narrow}
               currentGeo={geo}
               onGeoSelected={geo => this.setUserGeo(geo)} />
@@ -83,14 +89,18 @@ class GeoModal extends Component {
   }
 
   handleCloseModal(name) {
-    this.context.closeModal(name)
+    this.context.closeModal(name);
   }
 
   setUserGeo(geo) {
     if (typeof geo !== 'string' && geo.city && geo.state)
       geo = `${geo.city},%20${geo.state}`;
-    this.props.setGeo(geo);
-    this.context.closeModal('geo');
+
+    this.props.setGeo(geo).then(() => {
+      if (!this.props.user.geoValidationError)
+        this.context.closeModal('geo');
+    });
+
   }
 }
 
@@ -101,8 +111,8 @@ GeoModal.contextTypes = {
 GeoModal.defaultProps = {
   open: false,
   narrow: false,
-  geo: {},
+  user: {},
   setGeo: e => null
-}
+};
 
 export default GeoModal;

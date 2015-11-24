@@ -5,7 +5,7 @@ import {
   FETCH_BALEFIRE_PAGE_FAIL
 } from '../actions/actionTypes';
 
-let initialState = {}
+let initialState = {};
 
 function fetchPage(state, action) {
   return state;
@@ -16,7 +16,6 @@ function fetchPageSuccess(state, action) {
 }
 
 function fetchPageFail(state, action) {
-  console.error('balefire fetch fail', action);
   return state;
 }
 

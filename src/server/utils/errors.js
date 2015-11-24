@@ -10,6 +10,18 @@ export class AppError extends Error {
   }
 }
 
+export class NotFoundError extends Error {
+  constructor(message) {
+    super();
+    this.name = 'NotFoundError';
+    this.code = 'NotFound';
+    this.status = 404;
+    this.message = message;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
 export class AuthorizationError extends Error {
   constructor(message) {
     super();
@@ -28,18 +40,6 @@ export class AuthenticationError extends Error {
     this.name = 'AuthenticationError';
     this.code = 'AuthenticationFailed';
     this.status = 403;
-    this.message = message;
-
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
-
-export class NotFoundError extends Error {
-  constructor(message) {
-    super();
-    this.name = 'NotFoundError';
-    this.code = 'NotFound';
-    this.status = 404;
     this.message = message;
 
     Error.captureStackTrace(this, this.constructor);

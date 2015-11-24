@@ -1,11 +1,13 @@
 import Express from 'express';
 import config from '../../config';
+import handleErrors from './middleware/handleErrors';
 import logger from './utils/logger';
 
 export async function start() {
   const app = new Express();
 
-  app.set('trust proxy', 'loopback')
+  app.set('trust proxy', 'loopback');
+  app.locals.logger = logger;
 
   // hot reloading config
   if (__DEVELOPMENT__)
@@ -18,6 +20,10 @@ export async function start() {
     } catch (err) {
       next(err);
     }
+  });
+
+  app.use((err, req, res, next) => {
+    require('./middleware/handleErrors')(app)(err, req, res, next);
   });
 
   app.listen(config.port || 3000, (err) => {

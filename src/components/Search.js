@@ -73,27 +73,31 @@ class Search extends Component {
             color={colors.white}
             icon='search'
             onClick={e => this.handleSubmit()}
-            tabIndex='2'/>}
+            tabIndex='2'/>
+        }
 
-        <div
-          style={{
-            position: 'absolute',
-            top: narrow ? 59 : 41,
-            left: 0,
-            width: '100%',
-            boxShadow: narrow ? 'none' : '0px 4px 8px rgba(0,0,0,0.2)',
-            borderRadius: narrow ? 0 : 2,
-            borderBottom: narrow ? `1px solid ${colors.grey300}` : 0,
-            overflow: 'hidden'
-          }}>
-          {this.state.hasFocus &&
+        {this.state.hasFocus &&
+          <div
+            style={{
+              position: 'absolute',
+              top: narrow ? 59 : 41,
+              left: 0,
+              width: '100%',
+              boxShadow: narrow ? 'none' : '0px 4px 8px rgba(0,0,0,0.2)',
+              borderRadius: narrow ? 0 : 2,
+              borderBottom: narrow ? `1px solid ${colors.grey300}` : 0,
+              overflow: 'hidden'
+            }}>
             <SearchSuggest
               ref='suggestions'
               narrow={narrow}
               term={this.state.term}
-              onSuggestionFocus={suggestion => this.handleSuggestionFocus(suggestion)}
-              onSuggestionSelection={suggestion => this.handleSuggestionSelection(suggestion)}/>}
-        </div>
+              onSuggestionFocus={suggestion =>
+                this.handleSuggestionFocus(suggestion)}
+              onSuggestionSelection={suggestion =>
+                this.handleSuggestionSelection(suggestion)}/>
+          </div>
+        }
 
       </Flex>
     );
@@ -110,13 +114,13 @@ class Search extends Component {
   }
 
   handleSuggestionFocus(suggestion) {
-    console.log('focused', suggestion);
+
   }
 
   handleSuggestionSelection(suggestion) {
-    if (!suggestion)
+    if (!suggestion) {
       this.handleSubmit();
-    else {
+    } else {
       this.setState({term: ''});
       this.refs.input.value = '';
       this.props.onSelectSuggestion(suggestion);
@@ -133,7 +137,6 @@ class Search extends Component {
   handleSubmit() {
     if (!this.state.term) return;
     this.props.onSubmit(this.state.term);
-    console.log(`submitting ${this.state.term}`);
   }
 
   handleKeyUp(e) {

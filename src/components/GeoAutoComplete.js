@@ -12,7 +12,7 @@ class GeoAutoComplete extends React.Component {
       geoSearchTerm: '',
       geoResults: [],
       selectedIndex: -1
-    }
+    };
   }
 
   renderResultsList() {
@@ -20,13 +20,14 @@ class GeoAutoComplete extends React.Component {
       let selectableItems = this.state.geoResults.map((result, index) => {
         let geo = `${result.city}, ${result.state}`;
         return {label: geo, value: geo};
-      })
+      });
       return (
-        <div ref="geoResultsList">
+        <div ref='geoResultsList'>
           <SelectableList
             selectedIndex={this.state.selectedIndex}
             items={selectableItems}
-            onSelectedIndexChange={(prevIndex, index) => this.handleIndexChange(prevIndex, index)}
+            onSelectedIndexChange={(prevIndex, index) =>
+              this.handleIndexChange(prevIndex, index)}
             onItemSelected={index => this.handleGeoSelection(index)}/>
         </div>
       );
@@ -36,7 +37,7 @@ class GeoAutoComplete extends React.Component {
   }
 
   render() {
-    const {currentGeo} = this.props;
+    const {currentGeo, error} = this.props;
 
     const styles = {
       form: {
@@ -63,22 +64,41 @@ class GeoAutoComplete extends React.Component {
         borderBottom: `${this.props.narrow ? 1 : 0}px solid ${colors.grey300}`,
         borderLeft: `${this.props.narrow ? 1 : 0}px solid ${colors.grey300}`,
         borderRight: `${this.props.narrow ? 1 : 0}px solid ${colors.grey300}`
+      },
+      error: {
+        background: colors.red500,
+        borderBottom: `1px solid ${colors.red700}`,
+        color: colors.white,
+        lineHeight: '18px',
+        fontWeight: 600,
+        padding: 12
       }
     };
 
     return (
       <div>
-        <form ref="geoChangeForm" style={styles.form} onKeyUp={e => this.handleKeyUp(e)} onSubmit={e => this.handleGeoChangeSubmit(e)}>
+        {error &&
+          <div ref='error'>
+            <Flex align='center' justify='center' style={styles.error}>
+              <Icon name='error_outline' size={24} pushRight={10}/> {error}
+            </Flex>
+          </div>}
+        <form
+          ref='geoChangeForm'
+          style={styles.form}
+          onKeyUp={e => this.handleKeyUp(e)}
+          onSubmit={e => this.handleGeoChangeSubmit(e)}>
           <Flex align='center' style={{height: 72}}>
-            <Icon style={styles.markerIcon} name="location_on" />
+            <Icon style={styles.markerIcon} name='location_on' />
             <input
-              ref="geoInputField"
+              ref='geoInputField'
               style={styles.input}
               placeholder='Search by postal code or city'
               onChange={e => this.handleGeoInputChange(e.target.value)}
             />
           </Flex>
         </form>
+
         <div style={styles.suggestionList}>
           {this.renderResultsList()}
         </div>
@@ -95,12 +115,12 @@ class GeoAutoComplete extends React.Component {
 
   next() {
     if (this.state.selectedIndex < this.state.geoResults.length - 1)
-      this.handleIndexChange(this.state.selectedIndex + 1)
+      this.handleIndexChange(this.state.selectedIndex + 1);
   }
 
   prev() {
     if (this.state.selectedIndex > 0)
-      this.handleIndexChange(this.state.selectedIndex - 1)
+      this.handleIndexChange(this.state.selectedIndex - 1);
   }
 
   handleIndexChange(index) {
@@ -111,6 +131,7 @@ class GeoAutoComplete extends React.Component {
   }
 
   handleGeoSelection(index) {
+    if (!this.state.geoResults[index]) return;
     this.setState({selectedIndex: index});
     this.props.onGeoSelected(this.state.geoResults[index]);
   }
@@ -118,7 +139,8 @@ class GeoAutoComplete extends React.Component {
   handleGeoInputChange(value) {
     this.getSuggestions(value);
     this.setState({
-      geoSearchTerm: value
+      geoSearchTerm: value,
+      selectedIndex: -1
     });
   }
 
@@ -126,6 +148,7 @@ class GeoAutoComplete extends React.Component {
     e.preventDefault();
     let geoInputField = this.refs.geoInputField;
     let geoValue = geoInputField.value;
+    if (!geoValue) return;
     this.props.onGeoSelected(geoValue);
   }
 
@@ -142,7 +165,7 @@ class GeoAutoComplete extends React.Component {
     } else {
       this.setState({
         geoResults: []
-      })
+      });
     }
   }
 
@@ -168,7 +191,7 @@ class GeoAutoComplete extends React.Component {
   focus() {
     setTimeout(() => {
       this.refs.geoInputField.focus();
-    })
+    });
   }
 
 }
@@ -180,10 +203,11 @@ GeoAutoComplete.defaultProps = {
   url: 'https://vpdev.valpak.com/pub/auto/geo/cities',
   itemCount: 5,
   resetDelay: 200,
-  onResponse: function() {},
-  onError: function() {},
-  onGeoFocus: function() {},
-  onGeoSelected: function() {}
-}
+  error: null,
+  onResponse: e => null,
+  onError: e => null,
+  onGeoFocus: e => null,
+  onGeoSelected: e => null
+};
 
 export default GeoAutoComplete;

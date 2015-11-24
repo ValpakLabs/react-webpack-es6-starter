@@ -27,7 +27,7 @@ class BalefirePage extends Component {
         viewportSize: viewportSize
       });
     } catch (error) {
-      return <ErrorPage user={user} viewportSize={viewportSize} />;
+      return <ErrorPage user={user} viewportSize={viewportSize} error={error}/>;
     }
   }
 

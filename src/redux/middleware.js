@@ -1,3 +1,6 @@
+if (__SERVER__)
+  var winston = require('winston');
+
 export function promiseMiddleware(client) {
   return ({dispatch, getState}) =>
     next => async action => {
@@ -24,7 +27,7 @@ export function promiseMiddleware(client) {
           }
         });
       }
-    }
+    };
 }
 
 export function thunkMiddleware({ dispatch, getState }) {
@@ -34,5 +37,19 @@ export function thunkMiddleware({ dispatch, getState }) {
     } else {
       next(action);
     }
+  };
+}
+
+export function errorLogger({ dispatch, getState }) {
+  return next => action => {
+    if (!action.error)
+      return next(action);
+
+    if (winston)
+      winston.loggers.get('error').error(action.payload);
+    else
+      console.error(action.payload);
+
+    return next(action);
   };
 }

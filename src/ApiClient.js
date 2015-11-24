@@ -6,6 +6,7 @@ export default class ApiClient {
   constructor(config) {
     this.clientConfig = config;
     this.host = config.host;
+    this.hostPort = config.port;
   }
 
   config() {
@@ -19,17 +20,18 @@ export default class ApiClient {
   }
 
   async setUserGeo(geoString) {
-    let uri = `${this.host}/vpcom/api/geo`;
+    let uri = `http://${this.host}:${this.hostPort}/vpcom/api/geo`;
     let config = {
       method: 'post',
       body: JSON.stringify({geo: geoString}),
       ...this.config()
-    }
+    };
     return await this.call(uri, config);
   }
 
   async fetchBalefirePage(splat) {
-    let uri = `${this.host}/proxy?url=${this.clientConfig.balefireApiHost}/pages/${splat}`;
+    console.log(`http://${this.host}:${this.hostPort}`);
+    let uri = `http://${this.host}:${this.hostPort}/proxy?url=${this.clientConfig.balefireApiHost}/pages/${splat}`;
     let config = {
       method: 'get',
       ...this.config()
@@ -38,7 +40,7 @@ export default class ApiClient {
   }
 
   async fetchCollection(collectionId) {
-    let uri = `${this.host}/proxy?url=${this.clientConfig.collectionApiHost}/collections/${collectionId}`;
+    let uri = `http://${this.host}:${this.hostPort}/proxy?url=${this.clientConfig.collectionApiHost}/collections/${collectionId}`;
     let config = {
       method: 'get',
       ...this.config()
@@ -48,7 +50,7 @@ export default class ApiClient {
 
   async fetchListings(ids) {
     let qs = {id: ids};
-    let uri = `${this.host}/proxy?url=${this.clientConfig.collectionApiHost}/listings?${qs}`;
+    let uri = `http://${this.host}:${this.hostPort}/proxy?url=${this.clientConfig.collectionApiHost}/listings?${qs}`;
     let config = {
       method: 'get',
       ...this.config()
@@ -109,7 +111,8 @@ export default class ApiClient {
       json.location = location;
     if (response.status >= 200 && response.status < 300)
       return json;
-    throw json;
+
+    throw {message: response.statusText, status: response.status};
   }
 
 }

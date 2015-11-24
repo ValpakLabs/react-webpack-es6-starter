@@ -25,8 +25,13 @@ function createEnterFn(store) {
     if (store.initialLoad || __SERVER__)
       return callback();
     let components = nextState.routes.map(route => route.component);
-    await* prefetchData(components, getState, dispatch, nextState.location, nextState.params);
-    callback();
+    try {
+      await* prefetchData(components, getState, dispatch, nextState.location, nextState.params);
+      callback();
+    } catch (e) {
+      console.error('client prefetch error');
+      callback(e);
+    }
   };
 }
 

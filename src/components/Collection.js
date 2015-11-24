@@ -28,7 +28,7 @@ class Collection extends React.Component {
       <div style={styles}>
 
         {title &&
-          <Flex justify={narrow ? 'center' : 'space-between'} align='center' style={{marginBottom: narrow ? '1em' : '0'}}>
+          <Flex justify={narrow ? 'center' : 'space-between'} align='center' style={{marginBottom: narrow ? '1em' : '1.25em'}}>
             <Heading
               pushEnds={1.5}
               weight={narrow ? 500 : 300}
@@ -46,11 +46,11 @@ class Collection extends React.Component {
 
           {items.map((item, index) => {
             if (item.type === 'LOCAL_OFFER' || item.type === 'NATL_OFFER')
-              return <Listing key={index} {...item}/>
+              return <Listing key={index} {...item}/>;
             if (item.type === 'COLLECTION')
-              return <CollectionListing key={index} {...item}/>
+              return <CollectionListing key={index} {...item}/>;
             if (item.type === 'COLOR_CARD')
-              return <ColorCard key={index} {...item}/>
+              return <ColorCard key={index} {...item}/>;
           })}
 
         </Grid>

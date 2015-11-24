@@ -55,18 +55,18 @@ class Main extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const isNarrow = this.props.viewportSize === 'xs' || this.props.viewportSize === 'sm';
+    const narrow = this.props.viewportSize === 'xs' || this.props.viewportSize === 'sm';
     const wasNarrow = prevProps.viewportSize === 'xs' || prevProps.viewportSize === 'sm';
-    if (!isNarrow && wasNarrow && this.state.brandDrawerOpen)
+    if (!narrow && wasNarrow && this.state.brandDrawerOpen)
       this.setState({brandDrawerOpen: false});
   }
 
   render() {
-    const isNarrow = this.props.viewportSize === 'xs' || this.props.viewportSize === 'sm';
+    const narrow = this.props.viewportSize === 'xs' || this.props.viewportSize === 'sm';
 
     return (
       <div style={{height: '100vh', overflow: this.state.brandDrawerOpen ? 'hidden' : 'visible', position: this.state.brandDrawerOpen ? 'fixed' : 'relative'}}>
-        {isNarrow && <BrandDrawer user={this.props.user.toJS()}/>}
+        {narrow && <BrandDrawer user={this.props.user.toJS()}/>}
         <Motion
           ref='motion'
           style={{x: spring(this.state.brandDrawerOpen ? 260 : 0, [800, 45])}}>
@@ -89,14 +89,14 @@ class Main extends Component {
         </Motion>
 
         <GeoModal
-          geo={this.props.user.toJS().geo}
+          user={this.props.user.toJS()}
           open={this.state.geoModalOpen}
-          narrow={isNarrow}
+          narrow={narrow}
           setGeo={this.props.setUserGeo}/>
 
         <SearchModal
           open={this.state.searchModalOpen}
-          narrow={isNarrow}/>
+          narrow={narrow}/>
       </div>
     );
   }
@@ -106,7 +106,6 @@ class Main extends Component {
   }
 
   openModal(name) {
-    console.log(name);
     this.setState({[`${name}ModalOpen`]: true});
   }
 

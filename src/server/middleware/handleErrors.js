@@ -1,6 +1,10 @@
 import {AppError} from '../utils/errors';
+import winston from 'winston';
 
 export default function(app) {
+  const logger = app.locals.logger;
+  const errorLog = winston.loggers.get('error');
+
   return function(err, req, res, next) {
     switch (err.name) {
       case 'RequestError':
@@ -19,12 +23,16 @@ export default function(app) {
         res.status(err.status || 404).json(err);
         break;
       case 'AppError':
+        errorLog.error(err);
         res.status(err.status || 500).json(err);
         break;
       default:
-        const error = new AppError('Something went wrong.');
-        console.error(err.stack);
-        res.status(err.status || 500).json(error);
+        errorLog.error(err.stack);
+        const error = new AppError(
+          __DEVELOPMENT__ ? err.stack : 'Something is broken!'
+        );
+        res.setHeader('content-type', 'text/plain');
+        res.status(err.status || 500).send(error.message);
     }
-  }
+  };
 }
