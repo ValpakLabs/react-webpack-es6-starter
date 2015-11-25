@@ -16,15 +16,20 @@ export function fetchBalefirePage(splat) {
     promise: async client => {
       const page = await client.fetchBalefirePage(splat);
 
+      if (!page.zones)
+        return page;
+
       page.zones = Object.values(page.zones).reduce((zones, zone) => {
         zones[zone.identifier] = zone;
         return zones;
       }, {});
 
       try {
-        if (page.zones.hasOwnProperty('collections'))
+        if (page.zones.hasOwnProperty('collections')) {
           page.zones.collections = await resolveCollections(page.zones.collections.value.items, client);
+        }
       } catch (error) {
+        console.error(error.stack);
         return page;
       }
 
@@ -37,18 +42,21 @@ export function fetchCollection(collectionId) {
   return {
     types: [FETCH_COLLECTION, FETCH_COLLECTION_SUCCESS, FETCH_COLLECTION_FAIL],
     promise: async client => {
-      const collection = await client.fetchCollection(collectionId);
+      const [collection] = await resolveCollections([collectionId], client);
       return collection;
     }
   };
 }
 
 /**
- * Fetch all collections and resolve its listings if present.
+ * Fetch all collections and all listings associated listings.
  */
 async function resolveCollections(collectionIds, client) {
-  let collections = await* collectionIds.map(id =>
-    fetchCollectionWithoutFail(id, client));
+  let response = await client.fetchCollections(collectionIds);
+
+  let collections = collectionIds.map(id => {
+    return response.find(collection => collection.id === id);
+  });
 
   let listingIds = getAllListingIds(collections);
   let listings = await client.fetchListings(listingIds);

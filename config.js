@@ -4,7 +4,7 @@ module.exports = {
     mongoHost: 'mongodb://mongodev-01.coxtarget.com/valpak',
     serverRendering: true,
     host: process.env.HOSTNAME || 'localhost',
-    balefireApiHost: 'http://vpdev1.valpak.com:7720/balefire/v1/valpak',
+    balefireApiHost: 'https://apidev.valpak.com/balefire/v1/valpak',
     collectionApiHost: 'http://vpdev1.valpak.com:7788',
     isProduction: false,
     port: 7780,

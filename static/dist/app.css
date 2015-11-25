@@ -7,6 +7,9 @@ body {
   margin: 0;
   font-size: 14px;
   line-height: 24px;
+  width: 100vw;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 body, button, input, textarea {

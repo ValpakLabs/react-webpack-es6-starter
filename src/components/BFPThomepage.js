@@ -59,17 +59,19 @@ class BFPThomepage extends Component {
         }
 
         {collections[1] &&
-          <Container style={{padding: '40px 0', marginBottom: 20}}>
-            <Collection
-              viewportSize={viewportSize}
-              layout={{
-                lg: collections[1].layout,
-                md: collections[1].layout
-              }}
-              title={collections[1].title}
-              url={collections[1].url}
-              items={collections[1].items}/>
-          </Container>
+          <div style={{padding: '40px 0', marginBottom: 20}}>
+            <Container>
+              <Collection
+                viewportSize={viewportSize}
+                layout={{
+                  lg: collections[1].layout,
+                  md: collections[1].layout
+                }}
+                title={collections[1].title}
+                url={collections[1].url}
+                items={collections[1].items}/>
+            </Container>
+          </div>
         }
 
         {collections[2] &&
@@ -119,18 +121,20 @@ class BFPThomepage extends Component {
         }
 
         {collections[3] &&
-          <Container style={{padding: '40px 0', marginBottom: 20}}>
-            <Collection
-              viewportSize={viewportSize}
-              layout={{
-                lg: collections[3].layout,
-                md: collections[3].layout
-              }}
-              title={collections[3].title}
-              url={collections[3].url}
-              items={collections[3].items}
-            />
-          </Container>
+          <div style={{padding: '40px 0', marginBottom: 20}}>
+            <Container>
+              <Collection
+                viewportSize={viewportSize}
+                layout={{
+                  lg: collections[3].layout,
+                  md: collections[3].layout
+                }}
+                title={collections[3].title}
+                url={collections[3].url}
+                items={collections[3].items}
+              />
+            </Container>
+          </div>
         }
 
         <MemberEmailHero viewportSize={viewportSize}/>

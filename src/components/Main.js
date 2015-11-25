@@ -82,6 +82,7 @@ class Main extends Component {
                 transform: `translateX(${style.x}px)`,
               }}>
               {React.cloneElement(this.props.children, {
+                user: this.props.user,
                 viewportSize: this.props.viewportSize
               })}
             </div>

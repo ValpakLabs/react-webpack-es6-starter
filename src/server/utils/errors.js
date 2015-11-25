@@ -1,6 +1,8 @@
 export class AppError extends Error {
-  constructor(message) {
+  constructor(message, path=null) {
     super();
+    this.path = path;
+    this.error = true;
     this.name = 'AppError';
     this.code = 'ApplicationError';
     this.message = message;
@@ -11,8 +13,10 @@ export class AppError extends Error {
 }
 
 export class NotFoundError extends Error {
-  constructor(message) {
+  constructor(message, path=null) {
     super();
+    this.path = path;
+    this.error = true;
     this.name = 'NotFoundError';
     this.code = 'NotFound';
     this.status = 404;
@@ -23,8 +27,10 @@ export class NotFoundError extends Error {
 }
 
 export class AuthorizationError extends Error {
-  constructor(message) {
+  constructor(message, path=null) {
     super();
+    this.path = path;
+    this.error = true;
     this.name = 'AuthorizationError';
     this.code = 'NotAuthorized';
     this.status = 401;
@@ -35,8 +41,10 @@ export class AuthorizationError extends Error {
 }
 
 export class AuthenticationError extends Error {
-  constructor(message) {
+  constructor(message, path=null) {
     super();
+    this.path = path;
+    this.error = true;
     this.name = 'AuthenticationError';
     this.code = 'AuthenticationFailed';
     this.status = 403;
@@ -47,8 +55,10 @@ export class AuthenticationError extends Error {
 }
 
 export class RequestError extends Error {
-  constructor(message) {
+  constructor(message, path=null) {
     super();
+    this.path = path;
+    this.error = true;
     this.name = 'RequestError';
     this.code = 'BadRequest';
     this.status = 400;

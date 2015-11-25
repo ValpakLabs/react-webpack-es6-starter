@@ -87,7 +87,7 @@ class Grid extends React.Component {
     this.state = {
       width: this.props.width,
       isLoaded: false
-    }
+    };
     this.updateWidth = this.updateWidth.bind(this);
   }
 
@@ -118,7 +118,7 @@ class Grid extends React.Component {
     else if (Array.isArray(this.props.layout[viewportSize]))
       layout = this.props.layout[viewportSize];
 
-    let childCount = this.props.children.length
+    let childCount = this.props.children.length;
     let children = this.props.children;
 
     if (childCount >= Object.keys(layout).length && layout !== 'stack')

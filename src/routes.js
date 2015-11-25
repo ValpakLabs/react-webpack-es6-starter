@@ -2,16 +2,24 @@ import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import Main from './components/Main';
 import BalefirePage from './components/BalefirePage';
+import CollectionPage from './components/CollectionPage';
 
 function getRoutes(store) {
   const onEnter = createEnterFn(store);
   const appContext = store.getState().config.get('appContext');
   return (
-    <Route component={Main} path={`${appContext}/`}>
+    <Route component={Main} path={`${appContext}/`} onEnter={onEnterMain(store)}>
       <IndexRoute component={BalefirePage} onEnter={onEnter}/>
+      <Route path='r/collections/:collectionId' component={CollectionPage} onEnter={onEnter}/>
       <Route path='r/*' component={BalefirePage} onEnter={onEnter}/>
     </Route>
   );
+}
+
+function onEnterMain(store) {
+  return async (nextState, replaceState, callback) => {
+    callback();
+  };
 }
 
 /**

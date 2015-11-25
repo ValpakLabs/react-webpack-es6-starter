@@ -3,11 +3,10 @@ import { connect } from 'react-redux';
 import { fetchBalefirePage } from '../actions/fetchActions';
 import { viewportSizeSelector } from '../reducers/viewport';
 import ErrorPage from './ErrorPage';
-import responsive from './responsive';
 
 function mapStateToProps(state) {
   return {
-    page: state.balefirePage,
+    page: state.page.get('balefire'),
     user: state.user,
     ...viewportSizeSelector(state)
   };

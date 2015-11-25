@@ -7,6 +7,7 @@ export default class ApiClient {
     this.clientConfig = config;
     this.host = config.host;
     this.hostPort = config.port;
+    this.vpcomApiHost = `http://${this.host}:${this.hostPort}/vpcom/api`;
   }
 
   config() {
@@ -20,7 +21,7 @@ export default class ApiClient {
   }
 
   async setUserGeo(geoString) {
-    let uri = `http://${this.host}:${this.hostPort}/vpcom/api/geo`;
+    let uri = `${this.vpcomApiHost}/geo`;
     let config = {
       method: 'post',
       body: JSON.stringify({geo: geoString}),
@@ -30,8 +31,7 @@ export default class ApiClient {
   }
 
   async fetchBalefirePage(splat) {
-    console.log(`http://${this.host}:${this.hostPort}`);
-    let uri = `http://${this.host}:${this.hostPort}/proxy?url=${this.clientConfig.balefireApiHost}/pages/${splat}`;
+    let uri = `${this.vpcomApiHost}/balefire/pages/${splat}`;
     let config = {
       method: 'get',
       ...this.config()
@@ -39,18 +39,29 @@ export default class ApiClient {
     return await this.call(uri, config);
   }
 
-  async fetchCollection(collectionId) {
-    let uri = `http://${this.host}:${this.hostPort}/proxy?url=${this.clientConfig.collectionApiHost}/collections/${collectionId}`;
+  async fetchCollection(id) {
+    let uri = `${this.vpcomApiHost}/collections/${id}`;
     let config = {
       method: 'get',
       ...this.config()
     };
+    return await this.call(uri, config);
+  }
+
+  async fetchCollections(ids) {
+    let qs = JSON.stringify({id: ids});
+    let uri = `${this.vpcomApiHost}/collections?${qs}`;
+    let config = {
+      method: 'get',
+      ...this.config()
+    };
+
     return await this.call(uri, config);
   }
 
   async fetchListings(ids) {
-    let qs = {id: ids};
-    let uri = `http://${this.host}:${this.hostPort}/proxy?url=${this.clientConfig.collectionApiHost}/listings?${qs}`;
+    let qs = JSON.stringify({id: ids});
+    let uri = `${this.vpcomApiHost}/listings?${qs}`;
     let config = {
       method: 'get',
       ...this.config()
@@ -58,13 +69,8 @@ export default class ApiClient {
     return await this.call(uri, config);
   }
 
-  async get(resource, id, opts) {
-    if (typeof id === 'object') {
-      opts = id;
-      id = undefined;
-    }
-
-    let uri = `${this.apiHost}/${resource}${id ? '/' + id : ''}`;
+  async get(url, opts) {
+    let uri = url;
     if (opts)
       uri += `?${querystring.stringify(opts)}`;
 
@@ -100,6 +106,7 @@ export default class ApiClient {
       let response = await fetch(uri, config);
       return await this.handleResponse(response);
     } catch (error) {
+      // throw new Error(`Failed to fetch ${uri}, reason: ${error.message}`);
       throw error;
     }
   }
@@ -109,10 +116,11 @@ export default class ApiClient {
     const location = response.headers.get('location');
     if (location)
       json.location = location;
-    if (response.status >= 200 && response.status < 300)
-      return json;
 
-    throw {message: response.statusText, status: response.status};
+    if (json.error)
+      throw new Error(JSON.stringify(json));
+
+    return json;
   }
 
 }

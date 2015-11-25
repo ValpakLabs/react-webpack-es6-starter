@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import {findDOMNode} from 'react-dom';
 import colors, {brand} from '../theme/colors';
 import Flex from './Flex';
@@ -35,7 +36,16 @@ class Collection extends React.Component {
               level={narrow ? 3 : 2}>
               {title}
             </Heading>
-            {url && !narrow && <Button icon='arrow_forward' iconRight={true} color={colors.white} fill={brand.tertiary}>{buttonLabel}</Button>}
+            {url && !narrow &&
+              <Link to={`${url}`}>
+                <Button
+                  icon='arrow_forward'
+                  iconRight={true}
+                  color={colors.white}
+                  fill={brand.tertiary}>
+                  {buttonLabel}
+                </Button>
+              </Link>}
           </Flex>
         }
 
