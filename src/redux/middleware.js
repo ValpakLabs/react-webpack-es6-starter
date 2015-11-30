@@ -46,7 +46,7 @@ export function errorLogger({ dispatch, getState }) {
       return next(action);
 
     if (winston)
-      winston.loggers.get('error').error(action.payload);
+      winston.loggers.get('react-ssr').error(action.payload);
     else
       console.error(action.payload);
 

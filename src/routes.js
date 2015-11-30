@@ -7,12 +7,28 @@ import CollectionPage from './components/CollectionPage';
 function getRoutes(store) {
   const onEnter = createEnterFn(store);
   const appContext = store.getState().config.get('appContext');
+
   return (
-    <Route component={Main} path={`${appContext}/`} onEnter={onEnterMain(store)}>
-      <IndexRoute component={BalefirePage} onEnter={onEnter}/>
-      <Route path='r/collections/:collectionId' component={CollectionPage} onEnter={onEnter}/>
-      <Route path='r/*' component={BalefirePage} onEnter={onEnter}/>
-    </Route>
+    <Route
+      component={Main}
+      path={`${appContext}/`}
+      onEnter={onEnterMain(store)}>
+
+      <IndexRoute
+        component={BalefirePage}
+        onEnter={onEnter}/>
+
+      <Route
+        path='r/collections/:collectionId'
+        component={CollectionPage}
+        onEnter={onEnter}/>
+
+      <Route
+        ath='r/*'
+        component={BalefirePage}
+        onEnter={onEnter}/>
+
+  </Route>
   );
 }
 
@@ -34,7 +50,13 @@ function createEnterFn(store) {
       return callback();
     let components = nextState.routes.map(route => route.component);
     try {
-      await* prefetchData(components, getState, dispatch, nextState.location, nextState.params);
+      await* prefetchData(
+        components,
+        getState,
+        dispatch,
+        nextState.location,
+        nextState.params
+      );
       callback();
     } catch (e) {
       console.error('client prefetch error');

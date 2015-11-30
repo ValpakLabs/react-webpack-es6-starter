@@ -1,12 +1,11 @@
 import path from 'path';
 import express from 'express';
-import * as errors from './utils/errors';
 import serveStatic from 'serve-static';
 import compression from 'compression';
-import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import requestLogger from './middleware/requestLogger';
+import { responseCache } from './utils/cacheUtils';
 import api from './middleware/api';
 import detectDevice from './middleware/detectDevice';
 import detectGeo from './middleware/detectGeo';
@@ -14,31 +13,34 @@ import renderer from './middleware/renderer';
 import handleErrors from './middleware/handleErrors';
 
 export default function (app) {
-  const router = express.Router();
   const STATIC_DIR = path.join(__dirname, '../..', 'static');
-
-  router.use(requestLogger());
-
-  router.use(cookieParser());
-  router.use(session({
+  const router = express.Router();
+  const sessionConfig = {
     secret: 'valpak is teh hotnizz',
     resave: true,
     saveUninitialized: true,
     cookie: {maxAge: 60000 * 60 * 24 * 7}
-  }));
+  };
 
-  router.use(bodyParser.json());
-  router.use(bodyParser.urlencoded({extended: true}));
+  router.use(requestLogger());
+
   router.use(compression());
+
   router.use(serveStatic(STATIC_DIR));
 
-  router.use('/vpcom/api', api());
+  router.use(cookieParser());
+
+  router.use(session(sessionConfig));
+
+  router.use(responseCache(app));
+
+  router.use('/vpcom/api', api(app));
 
   router.use(detectGeo());
 
   router.use(detectDevice());
 
-  router.use(renderer);
+  router.use(renderer(app));
 
   return router;
 }

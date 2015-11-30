@@ -1,20 +1,19 @@
 import express from 'express';
 import * as errors from '../utils/errors';
 import config from '../../../config';
+import { createCacheWriter } from '../utils/cacheUtils';
+import { handleResponse } from '../utils/fetchUtils';
 
-export default function() {
+export default function(app) {
   const router = express.Router();
+  const cacheResponse = createCacheWriter(app.locals.memcached);
 
   router.route('/')
     .get(async (req, res, next) => {
       try {
-        let response = await fetch(`${config.collectionApiHost}/listings${req.url}`);
-
-        if (response.status === 404)
-          throw new errors.NotFoundError(response.statusText, req.originalUrl);
-
-        const listings = await response.json();
-
+        const uri = `${config.collectionApiHost}/listings${req.url}`;
+        const response = await fetch(uri);
+        const listings = await handleResponse(response, cacheResponse);
         res.json(listings);
       } catch (err) {
         next(err);

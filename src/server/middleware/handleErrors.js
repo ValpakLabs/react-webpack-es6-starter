@@ -6,6 +6,7 @@ export default function(app) {
   const errorLog = winston.loggers.get('error');
 
   return function(err, req, res, next) {
+
     switch (err.name) {
       case 'RequestError':
         res.status(err.status || 400).json(err);
@@ -22,8 +23,11 @@ export default function(app) {
       case 'NotFoundError':
         res.status(err.status || 404).json(err);
         break;
+      case 'BadGateway':
+        res.status(err.status || 502).json(err);
+        break;
       case 'AppError':
-        errorLog.error(err);
+        errorLog.error(err.stack);
         res.status(err.status || 500).json(err);
         break;
       default:
@@ -31,8 +35,7 @@ export default function(app) {
         const error = new AppError(
           __DEVELOPMENT__ ? err.stack : 'Something is broken!'
         );
-        res.setHeader('content-type', 'text/plain');
-        res.status(err.status || 500).send(error.message);
+        res.status(err.status || 500).json(error);
     }
   };
 }

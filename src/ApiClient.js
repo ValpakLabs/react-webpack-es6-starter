@@ -106,7 +106,6 @@ export default class ApiClient {
       let response = await fetch(uri, config);
       return await this.handleResponse(response);
     } catch (error) {
-      // throw new Error(`Failed to fetch ${uri}, reason: ${error.message}`);
       throw error;
     }
   }

@@ -29,7 +29,6 @@ export function fetchBalefirePage(splat) {
           page.zones.collections = await resolveCollections(page.zones.collections.value.items, client);
         }
       } catch (error) {
-        console.error(error.stack);
         return page;
       }
 

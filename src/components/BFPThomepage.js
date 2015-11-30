@@ -41,6 +41,15 @@ class BFPThomepage extends Component {
         user={this.props.user}
         viewportSize={viewportSize}>
 
+        {!Array.isArray(collections) &&
+          <Flex flex={1} align='center' justify='center' direction='column' style={{margin: narrow ? 20 : 60}}>
+            <Icon name='watch_later' size={120} fill={colors.red500}/>
+            <div style={{marginTop: 24, fontSize: narrow ? 18 : 24, lineHeight: narrow ? '24px' : '36px', textAlign: 'center'}}>
+              We're having trouble loading coupons right now. <br/>Please check back in a minute or two!
+            </div>
+          </Flex>
+        }
+
         {collections[0] &&
           <Flex style={styles.feature}>
             <Container>

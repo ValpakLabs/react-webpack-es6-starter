@@ -62,7 +62,6 @@ class Collection extends React.Component {
             if (item.type === 'COLOR_CARD')
               return <ColorCard key={index} {...item}/>;
           })}
-
         </Grid>
 
         {url && narrow && <Button style={{marginTop: 24}} display='block' justify='center' iconRight={true} icon='arrow_forward' color={colors.white} fill={brand.tertiary}>{buttonLabel}</Button>}

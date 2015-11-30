@@ -1,24 +1,23 @@
 import express from 'express';
 import * as errors from '../utils/errors';
 import config from '../../../config';
+import { createCacheWriter } from '../utils/cacheUtils';
+import { handleResponse } from '../utils/fetchUtils';
 
-export default function() {
+const BALEFIRE_TOKEN = 'X8JWdxVL2HMz8CQDdCQsaV5KDDbmzsKbuBrWHQN1Hso';
+
+export default function(app) {
   const router = express.Router();
+  const cacheResponse = createCacheWriter(app.locals.memcached);
 
   router.route('/*')
     .get(async (req, res, next) => {
       try {
-        let response = await fetch(config.balefireApiHost + req.url, {
-          headers: {
-            Authorization: 'Bearer X8JWdxVL2HMz8CQDdCQsaV5KDDbmzsKbuBrWHQN1Hso'
-          }
+        const uri = config.balefireApiHost + req.url;
+        const response = await fetch(uri, {
+          headers: {Authorization: `Bearer ${BALEFIRE_TOKEN}`}
         });
-
-        if (response.status === 404)
-          throw new errors.NotFoundError(response.statusText, req.originalUrl);
-
-        const page = await response.json();
-
+        const page = await handleResponse(response, cacheResponse);
         res.json(page);
       } catch (err) {
         next(err);

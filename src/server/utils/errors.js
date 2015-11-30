@@ -12,6 +12,20 @@ export class AppError extends Error {
   }
 }
 
+export class BadGatewayError extends Error {
+  constructor(message, path=null) {
+    super();
+    this.path = path;
+    this.error = true;
+    this.name = 'BadGateway';
+    this.code = 'BadGatewayError';
+    this.message = message;
+    this.status = 502;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
 export class NotFoundError extends Error {
   constructor(message, path=null) {
     super();
