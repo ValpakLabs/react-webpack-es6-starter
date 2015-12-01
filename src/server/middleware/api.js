@@ -4,13 +4,10 @@ import geo from '../api/geo';
 import balefire from '../api/balefire';
 import collections from '../api/collections';
 import listings from '../api/listings';
+import winston from 'winston';
 
 export default function(app) {
   const router = express.Router();
-
-  router.use((req, res, next) => {
-    next();
-  });
 
   router.use(bodyParser.json());
   router.use(bodyParser.urlencoded({extended: true}));

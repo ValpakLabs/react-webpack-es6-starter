@@ -10,7 +10,7 @@ const logger = winston.loggers.get('dev');
 
 watcher.on('ready', function() {
   watcher.on('all', function(...args) {
-    logger.debug('clearing /server/ module cache from server');
+    logger.info('clearing /server/ module cache from server');
     Object.keys(require.cache).forEach(function(id) {
       if (/\/src\/server\//.test(id)) {
         delete require.cache[id];
@@ -20,7 +20,7 @@ watcher.on('ready', function() {
 });
 
 compiler.plugin('done', function() {
-  logger.debug('Clearing /src/ module cache from server');
+  logger.info('Clearing /src/ module cache from server');
   const srcPath = path.resolve(__dirname, '../../');
   const regex = new RegExp(srcPath.replace(/\//g, '\\/'));
   Object.keys(require.cache).forEach(function(id) {

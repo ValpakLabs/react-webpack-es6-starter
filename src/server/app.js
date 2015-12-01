@@ -4,11 +4,11 @@ import config from '../../config';
 import handleErrors from './middleware/handleErrors';
 import logger from './utils/logger';
 import winston from 'winston';
-import util from 'util';
 
 export async function start() {
   const app = new Express();
   const errorLog = winston.loggers.get('error');
+  const devLog = winston.loggers.get('dev');
 
   let memcached = new Memcached(config.hazelcastNodeUri, {
     failures: 1,
@@ -43,8 +43,8 @@ export async function start() {
 
   app.listen(config.port || 3000, (err) => {
     if (err)
-      logger.error(err);
+      errorLog.error(err);
     else
-      logger.info('%s running on port %s', config.app.name, config.port || 3000);
+      devLog.info('%s running on port %s', config.app.name, config.port || 3000);
   });
 }

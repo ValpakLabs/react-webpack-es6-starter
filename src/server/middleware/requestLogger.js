@@ -6,19 +6,29 @@ export default function() {
 
   return (req, res, next) => {
     const end = res.end;
+    const reqStartTime = moment().milliseconds();
 
     res.end = (chunk, encoding) => {
-      const time = moment().utcOffset(0).format('DD/MM/YYYY:HH:mm:ss ZZ');
+      const timestamp = moment().utcOffset(0).format('DD/MM/YYYY:HH:mm:ss ZZ');
+      const responseTime = moment().milliseconds() - reqStartTime;
       const level = res.statusCode >= 500 ? 'error' :
-        res.statusCode >= 400 ? 'warn' :
-        'info';
+                     res.statusCode >= 400 ? 'warn' :
+                     'info';
 
       res.end = end;
       res.end(chunk, encoding);
 
       accessLog.log(
         level,
-        `${req.ip} - [${time}] "${req.method} ${req.originalUrl} HTTP/${req.httpVersionMajor + '.' + req.httpVersionMinor}" ${res.statusCode}`
+        '%s - [%s] "%s %s HTTP/%s.%s" %s (%sms)',
+        req.ip,
+        timestamp,
+        req.method,
+        decodeURIComponent(req.originalUrl),
+        req.httpVersionMajor,
+        req.httpVersionMinor,
+        res.statusCode,
+        responseTime
       );
     };
 

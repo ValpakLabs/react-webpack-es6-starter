@@ -11,6 +11,7 @@ import detectDevice from './middleware/detectDevice';
 import detectGeo from './middleware/detectGeo';
 import renderer from './middleware/renderer';
 import handleErrors from './middleware/handleErrors';
+import winston from 'winston';
 
 export default function (app) {
   const STATIC_DIR = path.join(__dirname, '../..', 'static');
@@ -23,6 +24,25 @@ export default function (app) {
   };
 
   router.use(requestLogger());
+
+  router.route('/debug/loglevel/:name/:level').post((req, res, next) => {
+    let logger = winston.loggers.get(req.params.name);
+    logger.transports.console.level = req.params.level;
+    res.sendStatus(200);
+  });
+
+  router.route('/cache/flush').post((req, res, next) => {
+    app.locals.memcached.del('node-vpcom:', (err, result) => {
+      winston.loggers.get('dev').debug('attempting to flush cache for node-vpcom');
+      if (!err) {
+        winston.loggers.get('dev').debug('cache flushed successfully');
+        res.sendStatus(200);
+      } else {
+        winston.loggers.get('dev').debug('error flushing cache', {error: err});
+        next(err);
+      }
+    });
+  });
 
   router.use(compression());
 

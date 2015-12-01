@@ -16,7 +16,7 @@ export default function(app) {
       try {
         const uri = `${config.collectionApiHost}/collections${req.url}`;
         const response = await fetch(uri);
-        const collections = await handleResponse(response, cacheResponse);
+        const collections = await handleResponse(req.originalUrl, response, cacheResponse);
         res.json(collections);
       } catch (err) {
         logger.error(err.message);

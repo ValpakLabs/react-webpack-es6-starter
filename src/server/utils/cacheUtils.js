@@ -1,4 +1,4 @@
-import winston from 'winston';
+import {loggers} from 'winston';
 
 const CACHE_KEY_PREFIX = 'node-vpcom';
 
@@ -12,6 +12,7 @@ function cacheResponse(cache, key, data, lifetime=86400) {
       if (err) {
         reject(err);
       } else {
+        console.log(`wrote ${CACHE_KEY_PREFIX}:${key}`);
         resolve(result);
       }
     });
@@ -19,21 +20,38 @@ function cacheResponse(cache, key, data, lifetime=86400) {
 }
 
 export function responseCache(app) {
-  const { memcached, logger } = app.locals;
-  const errorLog = winston.loggers.get('error');
-  const remoteLog = winston.loggers.get('remote');
+  const { memcached } = app.locals;
+  const errorLog = loggers.get('error');
+  const remoteLog = loggers.get('remote');
 
   return (req, res, next) => {
+
+    const debugData = {
+      host: memcached.servers,
+      key: `${CACHE_KEY_PREFIX}:${req.originalUrl}`
+    };
+
+    remoteLog.debug('get cached response', debugData);
+
     memcached.get(`${CACHE_KEY_PREFIX}:${req.originalUrl}`, (err, result) => {
       if (err) {
-        errorLog.warn('memcached', err.message);
+        errorLog.error('memcached', err.message);
+        remoteLog.error('cache lookup error', {
+          ...debugData,
+          error: err
+        });
         next();
       } else if (result) {
-        remoteLog.info(`found cached response: ${memcached.servers} -> ${CACHE_KEY_PREFIX}:${req.originalUrl}`);
+        remoteLog.debug('found cached response', {
+          ...debugData,
+          response: JSON.parse(result)
+        });
         res.send(JSON.parse(result));
       } else {
+        remoteLog.debug('no cached response for key', debugData);
         next();
       }
     });
+
   };
 }
