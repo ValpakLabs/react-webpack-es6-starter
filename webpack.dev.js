@@ -27,21 +27,21 @@ var config = {
         test: /\.js$/,
         include: path.join(__dirname, 'src'),
         loader: 'babel',
-        "query": {
-          "stage": 0,
-          "optional": ["es7.asyncFunctions", "runtime"],
-          "env": {
-            "development": {
-              "plugins": ["react-transform"],
-              "extra": {
-                "react-transform": {
-                  "transforms": [{
-                    "transform": "react-transform-hmr",
-                    "imports": ["react"],
-                    "locals": ["module"]
+        query: {
+          stage: 0,
+          optional: ['es7.asyncFunctions', 'runtime'],
+          env: {
+            development: {
+              plugins: ['react-transform'],
+              extra: {
+                'react-transform': {
+                  transforms: [{
+                    transform: 'react-transform-hmr',
+                    imports: ['react'],
+                    locals: ['module']
                   }, {
-                    "transform": "react-transform-catch-errors",
-                    "imports": ["react", "redbox-react"]
+                    transform: 'react-transform-catch-errors',
+                    imports: ['react', 'redbox-react']
                   }]
                 }
               }
@@ -63,6 +63,6 @@ var config = {
       __DEVTOOLS__: false
     })
   ]
-}
+};
 
 module.exports = config;

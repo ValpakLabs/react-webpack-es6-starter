@@ -3,7 +3,6 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-// var CleanPlugin = require('clean-webpack-plugin');
 var strip = require('strip-loader');
 var appConfig = require('./config');
 
@@ -44,8 +43,6 @@ var config = {
   },
 
   plugins: [
-    // new CleanPlugin([relativeAssetsPath]),
-
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       __CLIENT__: true,
