@@ -2,16 +2,28 @@ import winston from 'winston';
 import winstonConfig from 'winston/lib/winston/config';
 import moment from 'moment';
 
+winston.addColors({
+  quiet: 'grey'
+});
+
 const consoleTimestamp = () =>
   moment().utcOffset(0).format('DD/MM/YYYY:HH:mm:ss ZZ');
 
 const consoleFormatter = (options) => {
   const levelLabel = winston.config.colorize(options.level, options.level);
-  const label = options.label || '';
+  const label = winston.config.colorize('quiet', options.label || '');
   const now = options.timestamp();
   const message = options.message;
-  const meta = options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '';
+  const meta = options.meta && Object.keys(options.meta).length ? JSON.stringify(options.meta) : '';
   return `${levelLabel}: [${label}] [${now}] ${message} ${meta}`;
+};
+
+const defaultFormatter = (options) => {
+  const levelLabel = winston.config.colorize(options.level, options.level);
+  const label = winston.config.colorize('quiet', options.label || '');
+  const message = options.message;
+  const meta = options.meta && Object.keys(options.meta).length ? JSON.stringify(options.meta) : '';
+  return `${levelLabel}: [${label}] ${message} ${meta}`;
 };
 
 const logger = new (winston.Logger)({
@@ -23,11 +35,18 @@ const logger = new (winston.Logger)({
   ]
 });
 
+const fileErrorTransport = new (winston.transports.File)({
+  level: 'error',
+  name: 'errorFileTransport',
+  filename: 'error.log',
+});
+
 winston.loggers.add('access', {
   console: {
     level: 'info',
     colorize: true,
-    label: 'access'
+    label: 'access',
+    formatter: defaultFormatter
   },
   file: {
     filename: 'access.log'
@@ -36,21 +55,19 @@ winston.loggers.add('access', {
 
 winston.loggers.add('error', {
   console: {
-    level: 'silly',
+    level: 'error',
     colorize: true,
-    label: 'error'
+    label: 'error',
+    formatter: defaultFormatter
   },
-  file: {
-    filename: 'error.log',
-    handleExceptions: true,
-    humanReadableUnhandledException: true,
-    prettyPrint: true
-  }
+  transports: [
+    fileErrorTransport
+  ]
 });
 
 winston.loggers.add('remote', {
   console: {
-    level: 'silly',
+    level: 'info',
     colorize: true,
     label: 'remote',
     timestamp: consoleTimestamp,
@@ -59,12 +76,15 @@ winston.loggers.add('remote', {
   file: {
     level: 'info',
     filename: 'api-remote.log'
-  }
+  },
+  transports: [
+    fileErrorTransport
+  ]
 });
 
 winston.loggers.add('react-ssr', {
   console: {
-    level: 'silly',
+    level: 'info',
     colorize: true,
     label: 'react-ssr',
     timestamp: consoleTimestamp,
@@ -72,7 +92,10 @@ winston.loggers.add('react-ssr', {
   },
   file: {
     filename: 'react-ssr.log'
-  }
+  },
+  transports: [
+    fileErrorTransport
+  ]
 });
 
 winston.loggers.add('dev', {

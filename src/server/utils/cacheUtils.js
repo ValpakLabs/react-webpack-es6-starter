@@ -1,18 +1,24 @@
 import {loggers} from 'winston';
+import crypto from 'crypto';
 
 const CACHE_KEY_PREFIX = 'node-vpcom';
+const remoteLog = loggers.get('remote');
 
 export function createCacheWriter(cache, lifetime=86400) {
   return (key, data) => cacheResponse(cache, key, data, lifetime);
 }
 
 function cacheResponse(cache, key, data, lifetime=86400) {
+  let keyHash = getKeyHash(key);
+  const itemKey = `${CACHE_KEY_PREFIX}:${keyHash}`;
+
   return new Promise((resolve, reject) => {
-    cache.set(`${CACHE_KEY_PREFIX}:${key}`, data, lifetime, (err, result) => {
+    cache.set(itemKey, data, lifetime, (err, result) => {
       if (err) {
+        remoteLog.warn(`could not write item to cache, reason: ${err.message}`, {itemKey});
         reject(err);
       } else {
-        console.log(`wrote ${CACHE_KEY_PREFIX}:${key}`);
+        remoteLog.info('wrote item to cache', {itemKey});
         resolve(result);
       }
     });
@@ -21,37 +27,29 @@ function cacheResponse(cache, key, data, lifetime=86400) {
 
 export function responseCache(app) {
   const { memcached } = app.locals;
-  const errorLog = loggers.get('error');
-  const remoteLog = loggers.get('remote');
 
   return (req, res, next) => {
+    let keyHash = getKeyHash(req.originalUrl);
+    const itemKey = `${CACHE_KEY_PREFIX}:${keyHash}`;
 
-    const debugData = {
-      host: memcached.servers,
-      key: `${CACHE_KEY_PREFIX}:${req.originalUrl}`
-    };
+    remoteLog.debug('getting cached response', {itemKey});
 
-    remoteLog.debug('get cached response', debugData);
-
-    memcached.get(`${CACHE_KEY_PREFIX}:${req.originalUrl}`, (err, result) => {
+    memcached.get(itemKey, (err, result) => {
       if (err) {
-        errorLog.error('memcached', err.message);
-        remoteLog.error('cache lookup error', {
-          ...debugData,
-          error: err
-        });
+        remoteLog.warn(`could not retrieve item from cache, reason: ${err.message}`, {itemKey});
         next();
       } else if (result) {
-        remoteLog.debug('found cached response', {
-          ...debugData,
-          response: JSON.parse(result)
-        });
+        remoteLog.debug('got cached response', {itemKey});
         res.send(JSON.parse(result));
       } else {
-        remoteLog.debug('no cached response for key', debugData);
+        remoteLog.debug('no cached response for key', {itemKey});
         next();
       }
     });
 
   };
+}
+
+function getKeyHash(key) {
+  return crypto.createHash('md5').update(key).digest('hex');
 }

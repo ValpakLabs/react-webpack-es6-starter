@@ -4,7 +4,11 @@ global.__CLIENT__ = false;
 global.__SERVER__ = true;
 global.__DEVELOPMENT__ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
 
-require('isomorphic-fetch');
+require('babel/register')({
+  stage: 0,
+  optional: ['es7.asyncFunctions', 'runtime']
+});
+
 require('css-modules-require-hook')({
   extensions: ['.scss'],
   generateScopedName: function(exportedName, exportedPath) {
@@ -12,12 +16,5 @@ require('css-modules-require-hook')({
     return path + '-' + exportedName;
   }
 });
-require('babel/register')({
-  stage: 0,
-  optional: ['es7.asyncFunctions', 'runtime']
-});
-require('./src/server/app')
-  .start()
-  .catch(function(error) {
-    console.error('catch', error);
-  });
+
+require('./src/server/app');

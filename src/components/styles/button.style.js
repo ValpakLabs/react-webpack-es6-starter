@@ -44,7 +44,8 @@ function getButtonStyles(props) {
   let text = {
     margin: size === 'tiny' ? '0 0 0 3px' : '0 8px',
     fontWeight: weight || 500,
-    lineHeight: '24px'
+    lineHeight: '24px',
+    whiteSpace: 'nowrap'
   };
 
   let modifiers = {

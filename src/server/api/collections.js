@@ -5,7 +5,7 @@ import config from '../../../config';
 import { createCacheWriter } from '../utils/cacheUtils';
 import { handleResponse } from '../utils/fetchUtils';
 
-const logger = winston.loggers.get('remote');
+const remoteAccessLogger = winston.loggers.get('remote');
 
 export default function(app) {
   const router = express.Router();
@@ -17,9 +17,12 @@ export default function(app) {
         const uri = `${config.collectionApiHost}/collections${req.url}`;
         const response = await fetch(uri);
         const collections = await handleResponse(req.originalUrl, response, cacheResponse);
+
+        // logger.debug(response);
+
         res.json(collections);
       } catch (err) {
-        logger.error(err.message);
+        remoteAccessLogger.error(err.message);
         next(err);
       }
     });

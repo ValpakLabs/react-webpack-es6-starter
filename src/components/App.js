@@ -4,7 +4,7 @@ import getScreenType from '../utils/screen-state';
 import debounce from '../utils/debounce';
 import ResponsivePage from './ResponsivePage';
 import WelcomePage from './WelcomePage';
- 
+
 class App extends React.Component {
 
   constructor(props) {
@@ -23,12 +23,12 @@ class App extends React.Component {
       appContext: this.props.appContext || '',
       breakpoint: this.state.breakpoint,
       currentGeo: this.state.currentGeo
-    }
+    };
   }
- 
+
   render() {
     let classes = cx('App', {
-      [`App--${this.state.screenType}`]: true 
+      [`App--${this.state.screenType}`]: true
     });
 
     return (
@@ -38,7 +38,7 @@ class App extends React.Component {
         </ResponsivePage>
       </div>
     );
-  } 
+  }
 
   handleBreakpointChange(breakpointName, allBreakpoints) {
     let breakpointMinWidth = allBreakpoints[breakpointName];
@@ -49,18 +49,18 @@ class App extends React.Component {
   }
 
   handleGeoChange(geo) {
-    this.setState({currentGeo: geo})
+    this.setState({currentGeo: geo});
   }
 
 }
 
 App.propTypes = {
-  
-}
+
+};
 
 App.defaultProps = {
-  
-}
+
+};
 
 App.childContextTypes = {
   device: React.PropTypes.object.isRequired,
@@ -68,6 +68,6 @@ App.childContextTypes = {
   appContext: React.PropTypes.string.isRequired,
   breakpoint: React.PropTypes.string.isRequired,
   currentGeo: React.PropTypes.string.isRequired
-}
+};
 
 export default App;

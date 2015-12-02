@@ -23,22 +23,28 @@ export default function (app) {
     cookie: {maxAge: 60000 * 60 * 24 * 7}
   };
 
+  router.use((req, res, next) => {
+    next();
+  });
+
   router.use(requestLogger());
 
   router.route('/debug/loglevel/:name/:level').post((req, res, next) => {
     let logger = winston.loggers.get(req.params.name);
     logger.transports.console.level = req.params.level;
+    winston.loggers.get('dev').debug(`"${req.params.name}" console log level set to "${req.params.level}"`);
     res.sendStatus(200);
   });
 
   router.route('/cache/flush').post((req, res, next) => {
+    let logger = winston.loggers.get('remote');
     app.locals.memcached.del('node-vpcom:', (err, result) => {
-      winston.loggers.get('dev').debug('attempting to flush cache for node-vpcom');
+      logger.debug('attempting to flush cache for node-vpcom');
       if (!err) {
-        winston.loggers.get('dev').debug('cache flushed successfully');
+        logger.info('cache items flushed', {itemKey: 'node-vpcom'});
         res.sendStatus(200);
       } else {
-        winston.loggers.get('dev').debug('error flushing cache', {error: err});
+        logger.error('error flushing cache', {error: err});
         next(err);
       }
     });
